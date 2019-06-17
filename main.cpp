@@ -15,46 +15,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // ----------------------------------------------------------------------------
-
+#ifndef MBED_TEST_MODE
 #include "simplem2mclient.h"
-#ifdef TARGET_LIKE_MBED
 #include "mbed.h"
-#endif
 #include "application_init.h"
 #include "mcc_common_button_and_led.h"
-#include "blinky.h"
+
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT
 #include "certificate_enrollment_user_cb.h"
 #endif
-
-#if defined(MBED_CONF_NANOSTACK_HAL_EVENT_LOOP_USE_MBED_EVENTS) && \
- (MBED_CONF_NANOSTACK_HAL_EVENT_LOOP_USE_MBED_EVENTS == 1) && \
- defined(MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION) && \
- (MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION == 1)
-#include "nanostack-event-loop/eventOS_scheduler.h"
-#endif
-
-// event based LED blinker, controlled via pattern_resource
-#ifndef MCC_MINIMAL
-static Blinky blinky;
-#endif
-
-static void main_application(void);
-
-#if defined(MBED_CLOUD_APPLICATION_NONSTANDARD_ENTRYPOINT)
-extern "C"
-int mbed_cloud_application_entrypoint(void)
-#else
-int main(void)
-#endif
-{
-    return mcc_platform_run_program(main_application);
-}
 
 // Pointers to the resources that will be created in main_application().
 static M2MResource* button_res;
 static M2MResource* pattern_res;
 static M2MResource* blink_res;
+
+// An event queue is a very useful structure to debounce information between contexts (e.g. ISR and normal threads)
+// This is great because things such as network operations are illegal in ISR, so updating a resource in a button's fall() function is not allowed
+EventQueue eventQueue;
 
 // Pointer to mbedClient, used for calling close function.
 static SimpleM2MClient *client;
@@ -72,12 +50,7 @@ void blink_callback(void *)
 
     // The pattern is something like 500:200:500, so parse that.
     // LED blinking is done while parsing.
-#ifndef MCC_MINIMAL
-    const bool restart_pattern = false;
-    if (blinky.start((char*)pattern_res->value(), pattern_res->value_length(), restart_pattern) == false) {
-        printf("out of memory error\n");
-    }
-#endif
+    // TBD
     blink_res->send_delayed_post_response();
 }
 
@@ -135,30 +108,24 @@ void factory_reset(void *)
     }
 }
 
-void main_application(void)
+int main(void)
 {
-#if defined(__linux__) && (MBED_CONF_MBED_TRACE_ENABLE == 0)
-        // make sure the line buffering is on as non-trace builds do
-        // not produce enough output to fill the buffer
-        setlinebuf(stdout);
-#endif
-
     // Initialize trace-library first
     if (application_init_mbed_trace() != 0) {
         printf("Failed initializing mbed trace\n" );
-        return;
+        return -1;
     }
 
     // Initialize storage
     if (mcc_platform_storage_init() != 0) {
         printf("Failed to initialize storage\n" );
-        return;
+        return -1;
     }
 
     // Initialize platform-specific components
     if(mcc_platform_init() != 0) {
         printf("ERROR - platform_init() failed!\n");
-        return;
+        return -1;
     }
 
     // Print platform information
@@ -168,7 +135,7 @@ void main_application(void)
     if (!mcc_platform_init_connection()) {
         printf("Network initialized, registering...\n");
     } else {
-        return;
+        return -1;
     }
 
     // Print some statistics of the object sizes and their heap memory consumption.
@@ -188,7 +155,7 @@ void main_application(void)
     //  3. FCC initialization.
     if (!application_init()) {
         printf("Initialization failed, exiting application!\n");
-        return;
+        return -1;
     }
 
     // Save pointer to mbedClient so that other functions can access it.
@@ -202,7 +169,6 @@ void main_application(void)
     print_stack_statistics();
 #endif
 
-#ifndef MCC_MEMORY
     // Create resource for button count. Path of this resource will be: 3200/0/5501.
     button_res = mbedClient.add_cloud_resource(3200, 0, 5501, "button_resource", M2MResourceInstance::INTEGER,
                               M2MBase::GET_ALLOWED, 0, true, NULL, (void*)notification_status_callback);
@@ -224,39 +190,17 @@ void main_application(void)
     // Create resource for running factory reset for the device. Path of this resource will be: 5000/0/2.
     mbedClient.add_cloud_resource(5000, 0, 2, "factory_reset", M2MResourceInstance::STRING,
                  M2MBase::POST_ALLOWED, NULL, false, (void*)factory_reset, NULL);
-#endif
 
     mbedClient.register_and_connect();
-
-#ifndef MCC_MINIMAL
-    blinky.init(mbedClient, button_res);
-    blinky.request_next_loop_event();
-#endif
-
 
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT
     // Add certificate renewal callback
     mbedClient.get_cloud_client().on_certificate_renewal(certificate_renewal_cb);
 #endif // MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT
 
-#if defined(MBED_CONF_NANOSTACK_HAL_EVENT_LOOP_USE_MBED_EVENTS) && \
- (MBED_CONF_NANOSTACK_HAL_EVENT_LOOP_USE_MBED_EVENTS == 1) && \
- defined(MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION) && \
- (MBED_CONF_EVENTS_SHARED_DISPATCH_FROM_APPLICATION == 1)
-    printf("Starting mbed eventloop...\n");
+    eventQueue.dispatch_forever();
 
-    eventOS_scheduler_mutex_wait();
-
-    EventQueue *queue = mbed::mbed_event_queue();
-    queue->dispatch_forever();
-#else
-
-    // Check if client is registering or registered, if true sleep and repeat.
-    while (mbedClient.is_register_called()) {
-        mcc_platform_do_wait(100);
-    }
-
-    // Client unregistered, disconnect and exit program.
-    mcc_platform_close_connection();
-#endif
+    return 0;
 }
+
+#endif /* MBED_TEST_MODE */
