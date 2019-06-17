@@ -1,0 +1,82 @@
+{
+    "name": "client_app",
+    "macros": [
+        "MBED_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
+        "MBED_CLOUD_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\""
+    ],
+     "config": {
+        "platform-enable-button": {
+            "help": "Enable button usage on the board.",
+            "macro_name": "PLATFORM_ENABLE_BUTTON",
+            "value": 1
+        },
+        "platform-enable-led": {
+            "help": "Enable led usage on the board.",
+            "macro_name": "PLATFORM_ENABLE_LED",
+            "value": 1
+        },
+        "partition_mode": {
+            "help": "Macro for single or dual partition mode. This is supposed to be used with storage storage for data e.g. SD card. This enabled by default.",
+            "macro_name": "MCC_PLATFORM_PARTITION_MODE"
+        },
+        "auto_partition": {
+            "help": "Optional macro automatic SD card partitioning if required. Partioning will be triggered only if initialization of available partitions fail. This requires partition_mode to be enabled.",
+            "macro_name": "MCC_PLATFORM_AUTO_PARTITION"
+        },
+        "pal_number_of_partition": {
+             "help": "Optional macro PAL_NUMBER_OF_PARTITIONS",
+             "macro_name": "PAL_NUMBER_OF_PARTITIONS"
+        },
+        "primary_partition_size": {
+             "help": "Optional macro PRIMARY_PARTITION_SIZE in bytes, default is 1GB. This requires auto_partition to be enabled.",
+             "macro_name": "PRIMARY_PARTITION_SIZE"
+        },
+        "secondary_partition_size": {
+             "help": "Optional macro SECONDARY_PARTITION_SIZE in bytes, deault is 1GB. This requires auto_partition to be enabled.",
+             "macro_name": "SECONDARY_PARTITION_SIZE"
+        },
+        "pal_dtls_peer_min_timeout": {
+             "help": "pal_dtls_peer_min_timeout",
+             "macro_name": "PAL_DTLS_PEER_MIN_TIMEOUT",
+             "value": 5000
+        },
+        "sotp-section-1-address": {
+            "help": "Flash sector address for SOTP sector 1",
+            "macro_name": "PAL_INTERNAL_FLASH_SECTION_1_ADDRESS",
+            "value": null
+        },
+        "sotp-section-1-size": {
+            "help": "Flash sector size for SOTP sector 1",
+            "macro_name": "PAL_INTERNAL_FLASH_SECTION_1_SIZE",
+            "value": null
+        },
+        "sotp-section-2-address": {
+            "help": "Flash sector address for SOTP sector 2",
+            "macro_name": "PAL_INTERNAL_FLASH_SECTION_2_ADDRESS",
+            "value": null
+        },
+        "sotp-section-2-size": {
+            "help": "Flash sector size for SOTP sector 2",
+            "macro_name": "PAL_INTERNAL_FLASH_SECTION_2_SIZE",
+            "value": null
+        },
+        "mbedtls-user-config-file": {
+            "help": "Defines which TLS configuration the board should use.",
+            "macro_name": "MBEDTLS_USER_CONFIG_FILE",
+            "value": "\"mbedTLSConfig_mbedOS.h\""
+        },
+        "pal-user-defined-configuration": {
+            "help": "Defines which PAL configuration the board should use.",
+            "macro_name": "PAL_USER_DEFINED_CONFIGURATION",
+            "value": "\"pal_config_MbedOS.h\""
+        }
+    },
+    "target_overrides": {
+        "*": {
+            "pal_number_of_partition": 1,
+            "partition_mode": 1,
+            "auto_partition": 1
+        }
+     }
+}
+
