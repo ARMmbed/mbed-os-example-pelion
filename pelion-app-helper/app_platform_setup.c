@@ -16,8 +16,7 @@
 
 #include <stdio.h>
 #include "app_platform_setup.h"
-#include "mcc_common_setup.h"
-#include "mcc_common_config.h"
+#include "mcc_common.h"
 #include "factory_configurator_client.h"
 
 #if MBED_CONF_APP_DEVELOPER_MODE == 1

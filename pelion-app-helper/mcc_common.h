@@ -19,6 +19,16 @@
 
 #include <stdint.h>
 
+/* #define PLATFORM_ENABLE_BUTTON 1 for enabling button.*/
+#ifndef PLATFORM_ENABLE_BUTTON
+#define PLATFORM_ENABLE_BUTTON 0
+#endif 
+
+/* #define PLATFORM_ENABLE_LED 1 for enabling led.*/
+#ifndef PLATFORM_ENABLE_LED
+#define PLATFORM_ENABLE_LED 0 
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -54,12 +64,17 @@ void mcc_platform_do_wait(int timeout_ms);
 // for printing sW build info
 void mcc_platform_sw_build_info(void);
 
-/*!
- * @brief mcc_platform_run_program - Start the OS with the main function
- * @param testMain_t mainTestFunc  - main function to run
- * @return void
- */
-int  mcc_platform_run_program(main_t mainFunc);
+// Toggle led (if available)
+void mcc_platform_toggle_led(void);
+
+// Put led off (if available)
+void mcc_platform_led_off(void);
+
+// Check if button has been pressed (if available)
+uint8_t mcc_platform_button_clicked(void);
+
+uint8_t mcc_platform_init_button_and_led(void);
+
 #ifdef __cplusplus
 }
 #endif

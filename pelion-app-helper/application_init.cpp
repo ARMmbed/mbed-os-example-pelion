@@ -21,8 +21,7 @@
 #include "mbed-trace-helper.h"
 #include "factory_configurator_client.h"
 #include "app_platform_setup.h"
-#include "mcc_common_setup.h"
-#include "mcc_common_button_and_led.h"
+#include "mcc_common.h"
 #if defined (MBED_HEAP_STATS_ENABLED) || (MBED_STACK_STATS_ENABLED)
 #include "memory_tests.h"
 #endif

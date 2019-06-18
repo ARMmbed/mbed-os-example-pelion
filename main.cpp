@@ -19,7 +19,7 @@
 #include "simplem2mclient.h"
 #include "mbed.h"
 #include "application_init.h"
-#include "mcc_common_button_and_led.h"
+#include "mcc_common.h"
 
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT
 #include "certificate_enrollment_user_cb.h"

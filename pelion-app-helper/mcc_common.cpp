@@ -25,8 +25,7 @@
 #endif
 
 #include "mbed.h"
-#include "mcc_common_setup.h"
-#include "mcc_common_config.h"
+#include "mcc_common.h"
 #ifdef MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
 #include "kv_config.h"
 #endif
@@ -620,3 +619,85 @@ int mcc_platform_reformat_storage(void) {
    return status;
 }
 #endif // #ifndef MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
+
+
+#if PLATFORM_ENABLE_BUTTON
+// Make button and led definitions optional
+#ifndef MBED_CONF_APP_BUTTON_PINNAME
+#define MBED_CONF_APP_BUTTON_PINNAME NC
+#endif
+#endif
+
+#if PLATFORM_ENABLE_LED
+// Define led on/off
+#ifdef TARGET_STM
+#define LED_ON (true)
+#else // #ifdef TARGET_STM
+#define LED_ON (false)
+#endif // #ifdef TARGET_STM
+
+#define LED_OFF (!LED_ON)
+
+#ifndef MBED_CONF_APP_LED_PINNAME
+#define MBED_CONF_APP_LED_PINNAME NC
+#endif
+
+// Button and led
+static DigitalOut led(MBED_CONF_APP_LED_PINNAME, LED_OFF);
+#endif
+
+#if PLATFORM_ENABLE_BUTTON
+static InterruptIn button(MBED_CONF_APP_BUTTON_PINNAME);
+static bool button_pressed = false;
+static void button_press(void);
+
+static void button_press(void)
+{
+    button_pressed = true;
+}
+#endif
+
+uint8_t mcc_platform_button_clicked(void)
+{
+#if PLATFORM_ENABLE_BUTTON
+    if (button_pressed) {
+        button_pressed = false;
+        return true;
+    }
+#endif
+    return false;
+}
+
+uint8_t mcc_platform_init_button_and_led(void)
+{
+#if PLATFORM_ENABLE_BUTTON
+   if(MBED_CONF_APP_BUTTON_PINNAME != NC) {
+        button.fall(&button_press);
+    }
+#endif
+    return 0;
+}
+
+void mcc_platform_toggle_led(void)
+{
+#if PLATFORM_ENABLE_LED
+    if (MBED_CONF_APP_LED_PINNAME != NC) {
+        led = !led;
+    }
+    else {
+        printf("Virtual LED toggled\n");
+    }
+#endif
+}
+
+void mcc_platform_led_off(void)
+{
+#if PLATFORM_ENABLE_LED
+    if (MBED_CONF_APP_LED_PINNAME != NC) {
+        led = LED_OFF;
+    }
+    else {
+        printf("Virtual LED off\n");
+    }
+#endif
+}
