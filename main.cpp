@@ -18,7 +18,6 @@
 #ifndef MBED_TEST_MODE
 #include "simplem2mclient.h"
 #include "mbed.h"
-#include "application_init.h"
 #include "mcc_common.h"
 
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT

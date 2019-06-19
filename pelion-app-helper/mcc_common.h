@@ -18,6 +18,8 @@
 #define MCC_COMMON_SETUP_H
 
 #include <stdint.h>
+#include "mcc_common.h"
+#include "factory_configurator_client.h"
 
 /* #define PLATFORM_ENABLE_BUTTON 1 for enabling button.*/
 #ifndef PLATFORM_ENABLE_BUTTON
@@ -33,7 +35,19 @@
 extern "C" {
 #endif
 
-typedef void (*main_t)(void);
+// Initializes tracing library.
+bool application_init_mbed_trace(void);
+
+/*
+ * application_init() runs the following initializations:
+ *  1. platform initialization
+ *  2. print memory statistics if MBED_HEAP_STATS_ENABLED is defined
+ *  3. FCC initialization.
+ */
+bool application_init(void);
+
+// Prints the FCC status and corresponding error description, if any.
+void print_fcc_status(int fcc_status);
 
 // Initialize platform
 // related platform specific initializations required.
@@ -74,6 +88,20 @@ void mcc_platform_led_off(void);
 uint8_t mcc_platform_button_clicked(void);
 
 uint8_t mcc_platform_init_button_and_led(void);
+
+// Erases client credentials and SOTP storage, will also reformat
+// the external storage for Mbed OS if initial erase fail.
+int mcc_platform_reset_storage(void);
+
+// Initialize common details for fcc.
+int mcc_platform_fcc_init(void);
+
+// For developer-mode only, (re)initializes the RoT and for non-TRNG boards
+// also the entropy.
+int mcc_platform_sotp_init(void);
+
+// Reverse the resource allocations done by mcc_platform_fcc_init().
+void mcc_platform_fcc_finalize(void);
 
 #ifdef __cplusplus
 }

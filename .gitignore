@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# App files
+update_default_resources.c
+mbed_cloud_dev_credentials.c

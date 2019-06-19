@@ -27,7 +27,6 @@
 #include "mbed-client/m2minterface.h"
 #include "key_config_manager.h"
 #include "resource.h"
-#include "application_init.h"
 #include "factory_configurator_client.h"
 
 #ifdef MBED_CLOUD_CLIENT_USER_CONFIG_FILE
