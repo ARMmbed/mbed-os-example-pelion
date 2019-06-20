@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-///////////
-// INCLUDES
-///////////
-
 // Note: this macro is needed on armcc to get the the PRI*32 macros
 // from inttypes.h in a C++ code.
 #ifndef __STDC_FORMAT_MACROS
@@ -25,27 +21,25 @@
 #endif
 
 #include "mbed.h"
-#include "mcc_common.h"
+#include "platform_setup.h"
 #include "mbed_trace.h"
 #include "mbed-trace-helper.h"
 #include "kv_config.h"
 
-
+#if defined (MBED_HEAP_STATS_ENABLED) || (MBED_STACK_STATS_ENABLED)
+#include "memory_tests.h"
+#endif
 
 #define TRACE_GROUP "plat"
 
 #define SECONDS_TO_MS 1000  // to avoid using floats, wait() uses floats
 
-#ifndef MCC_PLATFORM_WAIT_BEFORE_BD_INIT
-#define MCC_PLATFORM_WAIT_BEFORE_BD_INIT 2
+#ifndef PLATFORM_WAIT_BEFORE_BD_INIT
+#define PLATFORM_WAIT_BEFORE_BD_INIT 2
 #endif
 
 /* local help functions. */
 const char* network_type(NetworkInterface *iface);
-
-////////////////////////////////////////
-// PLATFORM SPECIFIC DEFINES & FUNCTIONS
-////////////////////////////////////////
 
 static NetworkInterface* network_interface=NULL;
 
@@ -53,19 +47,18 @@ static NetworkInterface* network_interface=NULL;
  * */
 static void network_status_callback(nsapi_event_t status, intptr_t param);
 
-////////////////////////////////
-// SETUP_COMMON.H IMPLEMENTATION
-////////////////////////////////
+int platform_init_connection(void)
+{
 
-int mcc_platform_init_connection(void) {
 // Perform number of retries if network init fails.
-#ifndef MCC_PLATFORM_CONNECTION_RETRY_COUNT
-#define MCC_PLATFORM_CONNECTION_RETRY_COUNT 5
+#ifndef PLATFORM_CONNECTION_RETRY_COUNT
+#define PLATFORM_CONNECTION_RETRY_COUNT 5
 #endif
-#ifndef MCC_PLATFORM_CONNECTION_RETRY_TIMEOUT
-#define MCC_PLATFORM_CONNECTION_RETRY_TIMEOUT 1000
+#ifndef PLATFORM_CONNECTION_RETRY_TIMEOUT
+#define PLATFORM_CONNECTION_RETRY_TIMEOUT 1000
 #endif
-    printf("mcc_platform_init_connection()\n");
+
+    printf("platform_init_connection()\n");
     network_interface = NetworkInterface::get_default_instance();
     if(network_interface == NULL) {
         printf("ERROR: No NetworkInterface found!\n");
@@ -75,21 +68,21 @@ int mcc_platform_init_connection(void) {
     network_interface->add_event_listener(mbed::callback(&network_status_callback));
     printf("Connecting with interface: %s\n", network_type(NetworkInterface::get_default_instance()));
 
-    for (int i=1; i <= MCC_PLATFORM_CONNECTION_RETRY_COUNT; i++) {
+    for (int i=1; i <= PLATFORM_CONNECTION_RETRY_COUNT; i++) {
         nsapi_error_t e;
         e = network_interface->connect();
         if (e == NSAPI_ERROR_OK || e == NSAPI_ERROR_IS_CONNECTED) {
             printf("IP: %s\n", network_interface->get_ip_address());
             return 0;
         }
-        printf("Failed to connect! error=%d. Retry %d/%d\n", e, i, MCC_PLATFORM_CONNECTION_RETRY_COUNT);
+        printf("Failed to connect! error=%d. Retry %d/%d\n", e, i, PLATFORM_CONNECTION_RETRY_COUNT);
         (void) network_interface->disconnect();
-        wait_ms(MCC_PLATFORM_CONNECTION_RETRY_TIMEOUT * i);
+        wait_ms(PLATFORM_CONNECTION_RETRY_TIMEOUT * i);
     }
     return -1;
 }
 
-int mcc_platform_close_connection(void) {
+int platform_close_connection(void) {
 
     if (network_interface) {
         const nsapi_error_t err = network_interface->disconnect();
@@ -102,7 +95,7 @@ int mcc_platform_close_connection(void) {
     return -1;
 }
 
-void* mcc_platform_get_network_interface(void) {
+void* platform_get_network_interface(void) {
     return network_interface;
 }
 
@@ -168,8 +161,23 @@ const char* network_type(NetworkInterface *iface)
     }
 }
 
-int mcc_platform_init(void)
+int platform_init(void)
 {
+    // The function always returns 0.
+    (void) platform_init_button_and_led();
+
+    // Note we only support config with MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
+    // TODO: find out how to reset storage when a button is pressed
+    // This is critically import to ensure that the user can force 
+    // new credentials to be installed
+
+    // This wait will allow the board more time to initialize
+    wait_ms(PLATFORM_WAIT_BEFORE_BD_INIT * SECONDS_TO_MS);
+    int status = kv_init_storage_config();
+    if (status != MBED_SUCCESS) {
+        printf("kv_init_storage_config() - failed, status %d\n", status);
+    }
+
     // On CortexM (3 and 4) the MCU has a write buffer, which helps in performance front,
     // but has a side effect of making data access faults imprecise.
     //
@@ -193,9 +201,9 @@ int mcc_platform_init(void)
 
     SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;
 
-    tr_info("mcc_platform_init: disabled CPU write buffer, expect reduced performance");
+    tr_info("platform_init: disabled CPU write buffer, expect reduced performance");
 #else
-    tr_info("mcc_platform_init: disabling CPU write buffer not possible or needed on this MCU");
+    tr_info("platform_init: disabling CPU write buffer not possible or needed on this MCU");
 #endif
 
 #endif
@@ -203,8 +211,9 @@ int mcc_platform_init(void)
     return 0;
 }
 
-void mcc_platform_sw_build_info(void) {
-    printf("Application ready. Build at: " __DATE__ " " __TIME__ "\n");
+void platform_info(void) {
+    printf("Pelion Device Management application.\n");
+    printf("Built at: " __DATE__ " " __TIME__ "\n");
 
     // The Mbed OS' master branch does not define the version numbers at all, so we need
     // some ifdeffery to keep compilations running.
@@ -213,20 +222,6 @@ void mcc_platform_sw_build_info(void) {
 #else
     printf("Mbed OS version <UNKNOWN>\n");
 #endif
-}
-
-// Note we only support config with MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
-// TODO: find out how to reset storage when a button is pressed
-// as this is critical to ensure that the user can force new credentials
-// to be installed
-int mcc_platform_storage_init(void) {
-    // This wait will allow the board more time to initialize
-    wait_ms(MCC_PLATFORM_WAIT_BEFORE_BD_INIT * SECONDS_TO_MS);
-    int status = kv_init_storage_config();
-    if (status != MBED_SUCCESS) {
-        printf("kv_init_storage_config() - failed, status %d\n", status);
-    }
-    return status;
 }
 
 
@@ -262,7 +257,7 @@ static void button_press(void)
 }
 #endif
 
-uint8_t mcc_platform_button_clicked(void)
+uint8_t platform_button_clicked(void)
 {
 #if PLATFORM_ENABLE_BUTTON
     if (button_pressed) {
@@ -273,7 +268,7 @@ uint8_t mcc_platform_button_clicked(void)
     return false;
 }
 
-uint8_t mcc_platform_init_button_and_led(void)
+uint8_t platform_init_button_and_led(void)
 {
 #if PLATFORM_ENABLE_BUTTON
    if(MBED_CONF_APP_BUTTON_PINNAME != NC) {
@@ -283,7 +278,7 @@ uint8_t mcc_platform_init_button_and_led(void)
     return 0;
 }
 
-void mcc_platform_toggle_led(void)
+void platform_toggle_led(void)
 {
 #if PLATFORM_ENABLE_LED
     if (MBED_CONF_APP_LED_PINNAME != NC) {
@@ -295,7 +290,7 @@ void mcc_platform_toggle_led(void)
 #endif
 }
 
-void mcc_platform_led_off(void)
+void platform_led_off(void)
 {
 #if PLATFORM_ENABLE_LED
     if (MBED_CONF_APP_LED_PINNAME != NC) {
@@ -328,7 +323,7 @@ const uint8_t MBED_CLOUD_DEV_ENTROPY[FCC_ENTROPY_SIZE] = { 0xf6, 0xd6, 0xc0, 0x0
 #endif // PAL_USER_DEFINED_CONFIGURATION
 #endif // #if MBED_CONF_APP_DEVELOPER_MODE == 1
 
-int mcc_platform_reset_storage(void)
+int platform_reset_storage(void)
 {
 #if MBED_CONF_APP_DEVELOPER_MODE == 1
     printf("Resets storage to an empty state.\n");
@@ -339,7 +334,7 @@ int mcc_platform_reset_storage(void)
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
 // Flagging here because of reformat contains only implementation for mbed-os.
 #ifdef TARGET_LIKE_MBED
-        status = mcc_platform_reformat_storage();
+        status = platform_reformat_storage();
         if (status == 0) {
             printf("Storage reformatted, try reset storage again.\n");
             // Try to reset storage again after format.
@@ -358,7 +353,7 @@ int mcc_platform_reset_storage(void)
 #endif
 }
 
-int mcc_platform_fcc_init(void)
+int platform_fcc_init(void)
 {
 #if MBED_CONF_APP_DEVELOPER_MODE == 1
     int status = fcc_init();
@@ -367,10 +362,10 @@ int mcc_platform_fcc_init(void)
         printf("fcc_init failed with status %d! - exit\n", status);
         return status;
     }
-    status = mcc_platform_sotp_init();
+    status = platform_sotp_init();
     if (status != FCC_STATUS_SUCCESS) {
         printf("fcc_init failed with status %d! - exit\n", status);
-        mcc_platform_fcc_finalize();
+        platform_fcc_finalize();
     } else {
         // We can return SUCCESS here as preexisting RoT/Entropy is expected flow.
         status = FCC_STATUS_SUCCESS;
@@ -381,7 +376,7 @@ int mcc_platform_fcc_init(void)
 #endif
 }
 
-int mcc_platform_sotp_init(void)
+int platform_sotp_init(void)
 {
     int status = FCC_STATUS_SUCCESS;
 // Include this only for Developer mode and a device which doesn't have in-built TRNG support.
@@ -392,7 +387,7 @@ int mcc_platform_sotp_init(void)
 
     if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_ENTROPY_ERROR) {
         printf("fcc_entropy_set failed with status %d! - exit\n", status);
-        mcc_platform_fcc_finalize();
+        platform_fcc_finalize();
         return status;
     }
 #endif // PAL_USE_HW_TRNG = 0
@@ -403,7 +398,7 @@ int mcc_platform_sotp_init(void)
 
     if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_ROT_ERROR) {
         printf("fcc_rot_set failed with status %d! - exit\n", status);
-        mcc_platform_fcc_finalize();
+        platform_fcc_finalize();
     } else {
         // We can return SUCCESS here as preexisting RoT/Entropy is expected flow.
         printf("Using hardcoded Root of Trust, not suitable for production use.\n");
@@ -414,17 +409,12 @@ int mcc_platform_sotp_init(void)
     return status;
 }
 
-void mcc_platform_fcc_finalize(void)
+void platform_fcc_finalize(void)
 {
 #if MBED_CONF_APP_DEVELOPER_MODE == 1
     (void)fcc_finalize();
 #endif
 }
-
-#if defined (MBED_HEAP_STATS_ENABLED) || (MBED_STACK_STATS_ENABLED)
-#include "memory_tests.h"
-#endif
-#include "mcc_common.h"
 
 void print_fcc_status(int fcc_status)
 {
@@ -596,25 +586,30 @@ static bool application_init_verify_cloud_configuration()
     return result;
 }
 
-static bool application_init_fcc(void)
+bool application_init_fcc(void)
 {
+#ifdef MBED_HEAP_STATS_ENABLED
+    print_heap_stats();
+#endif
+
 #ifdef MBED_STACK_STATS_ENABLED
     print_stack_statistics();
 #endif
+
     int status;
-    status = mcc_platform_fcc_init();
+    status = platform_fcc_init();
     if(status != FCC_STATUS_SUCCESS) {
         printf("application_init_fcc fcc_init failed with status %d! - exit\n", status);
         return 1;
     }
 #if RESET_STORAGE
-    status = mcc_platform_reset_storage();
+    status = platform_reset_storage();
     if(status != FCC_STATUS_SUCCESS) {
         printf("application_init_fcc reset_storage failed with status %d! - exit\n", status);
         return 1;
     }
     // Reinitialize SOTP
-    status = mcc_platform_sotp_init();
+    status = platform_sotp_init();
     if (status != FCC_STATUS_SUCCESS) {
         printf("application_init_fcc sotp_init failed with status %d! - exit\n", status);
         return 1;
@@ -630,15 +625,15 @@ static bool application_init_fcc(void)
 #ifndef MBED_CONF_APP_MCC_NO_AUTO_FORMAT
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_EXTERNAL_SST_SUPPORT
         printf("Certificate validation failed, trying autorecovery...\n");
-        if (mcc_platform_reformat_storage() != 0) {
+        if (platform_reformat_storage() != 0) {
             return 1;
         }
 #endif
-        status = mcc_platform_reset_storage();
+        status = platform_reset_storage();
         if (status != FCC_STATUS_SUCCESS) {
             return 1;
         }
-        status = mcc_platform_sotp_init();
+        status = platform_sotp_init();
         if (status != FCC_STATUS_SUCCESS) {
             return 1;
         }
@@ -652,29 +647,5 @@ static bool application_init_fcc(void)
 #endif
     }
     return 0;
-}
-
-bool application_init(void)
-{
-    // The function always returns 0.
-    (void) mcc_platform_init_button_and_led();
-
-    // Print some statistics of current heap memory consumption, useful for finding
-    // out where the memory goes.
-#ifdef MBED_HEAP_STATS_ENABLED
-    print_heap_stats();
-#endif
-
-#ifdef MBED_STACK_STATS_ENABLED
-    print_stack_statistics();
-#endif
-    printf("Start Device Management Client\n");
-
-    if (application_init_fcc() != 0) {
-        printf("Failed initializing FCC\n" );
-        return false;
-    }
-
-    return true;
 }
 

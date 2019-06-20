@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef MCC_COMMON_SETUP_H
-#define MCC_COMMON_SETUP_H
+#ifndef PLATFORM_SETUP_H
+#define PLATFORM_SETUP_H
 
 #include <stdint.h>
-#include "mcc_common.h"
+#include "platform_setup.h"
 #include "factory_configurator_client.h"
 
 /* #define PLATFORM_ENABLE_BUTTON 1 for enabling button.*/
@@ -38,13 +38,8 @@ extern "C" {
 // Initializes tracing library.
 bool application_init_mbed_trace(void);
 
-/*
- * application_init() runs the following initializations:
- *  1. platform initialization
- *  2. print memory statistics if MBED_HEAP_STATS_ENABLED is defined
- *  3. FCC initialization.
- */
-bool application_init(void);
+// FCC init
+bool application_init_fcc(void);
 
 // Prints the FCC status and corresponding error description, if any.
 void print_fcc_status(int fcc_status);
@@ -54,57 +49,57 @@ void print_fcc_status(int fcc_status);
 //
 // @returns
 //   0 for success, anything else for error
-int mcc_platform_init(void);
+int platform_init(void);
 
 // Initialize network connection
-int mcc_platform_init_connection(void);
+int platform_init_connection(void);
 
 // Close network connection
-int mcc_platform_close_connection(void);
+int platform_close_connection(void);
 
 // Return network interface.
-void *mcc_platform_get_network_interface(void);
+void *platform_get_network_interface(void);
 
 // Format storage (DEPRECATED)
-int mcc_platform_reformat_storage(void);
+int platform_reformat_storage(void);
 
 // initialize common details for storage for storing KCM data etc.
 // creates default folders, reformat.
-int mcc_platform_storage_init(void);
+int platform_storage_init(void);
 
 // Wait
-void mcc_platform_do_wait(int timeout_ms);
+void platform_do_wait(int timeout_ms);
 
-// for printing sW build info
-void mcc_platform_sw_build_info(void);
+// for printing platform information in the console
+void platform_info(void);
 
 // Toggle led (if available)
-void mcc_platform_toggle_led(void);
+void platform_toggle_led(void);
 
 // Put led off (if available)
-void mcc_platform_led_off(void);
+void platform_led_off(void);
 
 // Check if button has been pressed (if available)
-uint8_t mcc_platform_button_clicked(void);
+uint8_t platform_button_clicked(void);
 
-uint8_t mcc_platform_init_button_and_led(void);
+uint8_t platform_init_button_and_led(void);
 
 // Erases client credentials and SOTP storage, will also reformat
 // the external storage for Mbed OS if initial erase fail.
-int mcc_platform_reset_storage(void);
+int platform_reset_storage(void);
 
 // Initialize common details for fcc.
-int mcc_platform_fcc_init(void);
+int platform_fcc_init(void);
 
 // For developer-mode only, (re)initializes the RoT and for non-TRNG boards
 // also the entropy.
-int mcc_platform_sotp_init(void);
+int platform_sotp_init(void);
 
-// Reverse the resource allocations done by mcc_platform_fcc_init().
-void mcc_platform_fcc_finalize(void);
+// Reverse the resource allocations done by platform_fcc_init().
+void platform_fcc_finalize(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // #ifndef MCC_COMMON_SETUP_H
+#endif // #ifndef PLATFORM_SETUP_H

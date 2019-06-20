@@ -16,9 +16,6 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------
 
-
-#ifdef TARGET_LIKE_MBED
-
 #if defined (MBED_HEAP_STATS_ENABLED) || (MBED_STACK_STATS_ENABLED)
 // used by print_heap_stats only
 #include "mbed_stats.h"
@@ -238,4 +235,4 @@ void print_stack_statistics()
     printf("*****************************\n\n");
 }
 #endif // MBED_STACK_STATS_ENABLED
-#endif // TARGET_LIKE_MBED
+

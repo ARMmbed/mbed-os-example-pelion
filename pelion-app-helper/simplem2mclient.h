@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include "mbed-cloud-client/MbedCloudClient.h"
 #include "m2mdevice.h"
-#include "mcc_common.h"
+#include "platform_setup.h"
 #include "m2mresource.h"
 #include "mbed-client/m2minterface.h"
 #include "key_config_manager.h"
@@ -57,7 +57,7 @@ public:
         _cloud_client.on_unregistered(this, &SimpleM2MClient::client_unregistered);
         _cloud_client.on_error(this, &SimpleM2MClient::error);
 
-        bool setup = _cloud_client.setup(mcc_platform_get_network_interface());
+        bool setup = _cloud_client.setup(platform_get_network_interface());
         _register_called = true;
         if (!setup) {
             printf("Client setup failed\n");

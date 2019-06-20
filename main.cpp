@@ -16,9 +16,9 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------
 #ifndef MBED_TEST_MODE
-#include "simplem2mclient.h"
 #include "mbed.h"
-#include "mcc_common.h"
+#include "simplem2mclient.h"
+#include "platform_setup.h"
 
 #ifndef MBED_CONF_MBED_CLOUD_CLIENT_DISABLE_CERTIFICATE_ENROLLMENT
 #include "certificate_enrollment_user_cb.h"
@@ -53,6 +53,7 @@ void blink_callback(void *)
     blink_res->send_delayed_post_response();
 }
 
+// TODO: move somewhere in the helper folder
 void notification_status_callback(const M2MBase& object,
                             const M2MBase::MessageDeliveryStatus status,
                             const M2MBase::MessageType /*type*/)
@@ -115,23 +116,17 @@ int main(void)
         return -1;
     }
 
-    // Initialize storage
-    if (mcc_platform_storage_init() != 0) {
-        printf("Failed to initialize storage\n" );
-        return -1;
-    }
-
     // Initialize platform-specific components
-    if(mcc_platform_init() != 0) {
+    if(platform_init() != 0) {
         printf("ERROR - platform_init() failed!\n");
         return -1;
     }
 
     // Print platform information
-    mcc_platform_sw_build_info();
+    platform_info();
 
     // Initialize network
-    if (!mcc_platform_init_connection()) {
+    if (!platform_init_connection()) {
         printf("Network initialized, registering...\n");
     } else {
         return -1;
@@ -148,12 +143,9 @@ int main(void)
     // SimpleClient is used for registering and unregistering resources to a server.
     SimpleM2MClient mbedClient;
 
-    // application_init() runs the following initializations:
-    //  1. platform initialization
-    //  2. print memory statistics if MBED_HEAP_STATS_ENABLED is defined
-    //  3. FCC initialization.
-    if (!application_init()) {
-        printf("Initialization failed, exiting application!\n");
+    //  Factory Config Client initialization
+    if (application_init_fcc() != 0) {
+        printf("Failed initializing FCC, exiting application!\n");
         return -1;
     }
 

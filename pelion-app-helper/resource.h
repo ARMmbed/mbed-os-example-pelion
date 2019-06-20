@@ -20,7 +20,6 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-
 /**
  * \brief Helper function for creating different kind of resources.
  *        The path of the resource will be "object_id/instance_id/resource_id"
