@@ -21,22 +21,27 @@
 #define MBED_CLOUD_CLIENT_USER_CONFIG_H
 
 #define MBED_CLOUD_CLIENT_ENDPOINT_TYPE         "default"
-
+#define MBED_CLOUD_CLIENT_TRANSPORT_MODE_TCP
 #define MBED_CLOUD_CLIENT_LIFETIME              3600
 
-#ifdef MBED_CONF_MBED_CLIENT_SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE
-    #define SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE    MBED_CONF_MBED_CLIENT_SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE
+#ifdef __FREERTOS__
+    #define SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE       512
 #else
-    #define SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE 1024
+    #define SN_COAP_MAX_BLOCKWISE_PAYLOAD_SIZE       1024
 #endif
 
-#define MBED_CLOUD_CLIENT_TRANSPORT_MODE_TCP
-
-/* Enable update support in Pelion Device Management Client */
-#define MBED_CLOUD_CLIENT_SUPPORT_UPDATE
-
+/* set flag to enable update support in mbed Cloud client */
+#ifndef __FREERTOS__
+    #define MBED_CLOUD_CLIENT_SUPPORT_UPDATE
+#endif
 /* set download buffer size in bytes (min. 1024 bytes) */
+
+/* Use larger buffers in Linux */
+#ifdef __linux__
+#define MBED_CLOUD_CLIENT_UPDATE_BUFFER          (2 * 1024 * 1024)
+#else
 #define MBED_CLOUD_CLIENT_UPDATE_BUFFER          2048
+#endif
 
 /* Developer flags for Update feature */
 #if MBED_CONF_APP_DEVELOPER_MODE == 1

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018 ARM Limited. All rights reserved.
+ * Copyright (c) 2018-2019 ARM Limited. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0
  * Licensed under the Apache License, Version 2.0 (the License); you may
  * not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-///////////
-// INCLUDES
-///////////
+#ifndef PAL_CONFIG_MBEDOS
+#define PAL_CONFIG_MBEDOS
 
-#ifndef CERTIFICATE_ENROLLMENT_USER_CB_H
-#define CERTIFICATE_ENROLLMENT_USER_CB_H
+#define PAL_USE_HW_ROT 0
+#define PAL_USE_HW_RTC 0
+#define PAL_USE_HW_TRNG 1
+#define PAL_SIMULATOR_FLASH_OVER_FILE_SYSTEM 0
+#define PAL_USE_INTERNAL_FLASH 0
+#define PAL_USE_SECURE_TIME 1
 
-#include "ce_status.h"
-#include "ce_defs.h"
-#include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "mbedOS_SST.h"
 
-void certificate_renewal_cb(const char *cert_name, ce_status_e status, ce_initiator_e initiator);
 
-#ifdef __cplusplus
-}
-#endif
-#endif // CERTIFICATE_ENROLLMENT_USER_CB_H
-
+#endif //PAL_CONFIG_MBEDOS
