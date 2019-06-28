@@ -32,12 +32,11 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 
-
 void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
-    printf("ID: %s\n", cloud_client->endpoint_info()->endpoint_name.c_str());
-    printf("Endpoint Name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
+    printf("Endpoint name: %s\n\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
+    printf("Device ID: %s\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
 void button_press(void)
@@ -90,8 +89,8 @@ int main(void)
         return -1;
     }
 
-    printf("Init KVStore\n");
     // Mount default kvstore
+    printf("Initialize KVStore\n");
     status = kv_init_storage_config();
     if (status != MBED_SUCCESS) {
         printf("kv_init_storage_config() - failed, status %d\n", status);
@@ -99,6 +98,7 @@ int main(void)
     }
 
     // Connect with NetworkInterface
+    printf("Connect to network\n");
     NetworkInterface *network = NetworkInterface::get_default_instance();
     if (network == NULL) {
         printf("Failed to get default NetworkInterface\n");
@@ -109,7 +109,7 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-    printf("Network connected with IP %s\n", network->get_ip_address());
+    printf("Network connected with IP %s\n\n", network->get_ip_address());
 
     // Run developer flow
     printf("Start developer flow\n");
@@ -151,12 +151,11 @@ int main(void)
         return -1;
     }
 
-    printf("Starting Pelion Device Management Client\n");
+    printf("\nRegister Pelion Device Management Client\n");
     cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
-    printf("Application loop\n");
     while(1) {
         int in_char = getchar();
         if (in_char == 'i') {
