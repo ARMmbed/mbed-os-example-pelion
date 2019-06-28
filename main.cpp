@@ -80,25 +80,6 @@ void update_progress(uint32_t progress, uint32_t total)
     printf("Update progress = %" PRIu8 "%%\n", percent);
 }
 
-void update_authorize(int32_t request)
-{
-    switch (request) {
-        case MbedCloudClient::UpdateRequestDownload:
-            printf("Download authorized\n");
-            cloud_client->update_authorize(MbedCloudClient::UpdateRequestDownload);
-            break;
-
-        case MbedCloudClient::UpdateRequestInstall:
-            printf("Update authorized -> reboot\n");
-            cloud_client->update_authorize(MbedCloudClient::UpdateRequestInstall);
-            break;
-
-        default:
-            printf("update_authorize(%" PRId32 "), unknown request", request);
-            break;
-    }
-}
-
 int main(void)
 {
     int status;
@@ -167,7 +148,7 @@ int main(void)
     }
 
     printf("Starting Pelion Device Management Client\n");
-    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, update_authorize, update_progress);
+    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
