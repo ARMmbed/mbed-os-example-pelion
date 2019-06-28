@@ -35,9 +35,9 @@ static M2MResource* m2m_post_res;
 
 void print_client_ids(void)
 {
-    printf("Account ID: %s\r\n", cloud_client->endpoint_info()->account_id.c_str());
-    printf("ID: %s\r\n", cloud_client->endpoint_info()->endpoint_name.c_str());
-    printf("Endpoint Name: %s\r\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
+    printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
+    printf("ID: %s\n", cloud_client->endpoint_info()->endpoint_name.c_str());
+    printf("Endpoint Name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
 }
 
 void button_press(void)
@@ -48,48 +48,48 @@ void button_press(void)
 
 void put_update(const char* /*object_name*/)
 {
-    printf("PUT update %d\r\n", (int)m2m_put_res->get_value_int());
+    printf("PUT update %d\n", (int)m2m_put_res->get_value_int());
 }
 
-void execute_post(void */*arguments*/)
+void execute_post(void* /*arguments*/)
 {
-    printf("POST executed\r\n");
+    printf("POST executed\n");
 }
 
 void client_registered(void)
 {
-    printf("Client registered: \r\n");
+    printf("Client registered: \n");
     print_client_ids();
     cloud_client_registered = true;
 }
 
 void client_unregistered(void)
 {
-    printf("Client unregistered\r\n");
+    printf("Client unregistered\n");
     cloud_client_registered = false;
 }
 
 void client_error(int err)
 {
-    printf("client_error(%d) -> %s\r\n", err, cloud_client->error_description());
+    printf("client_error(%d) -> %s\n", err, cloud_client->error_description());
 }
 
 void update_progress(uint32_t progress, uint32_t total)
 {
     uint8_t percent = (uint8_t)((uint64_t)progress * 100 / total);
-    printf("Update progress = %" PRIu8 "%%\r\n", percent);
+    printf("Update progress = %" PRIu8 "%%\n", percent);
 }
 
 void update_authorize(int32_t request)
 {
     switch (request) {
         case MbedCloudClient::UpdateRequestDownload:
-            printf("Download authorized\r\n");
+            printf("Download authorized\n");
             cloud_client->update_authorize(MbedCloudClient::UpdateRequestDownload);
             break;
 
         case MbedCloudClient::UpdateRequestInstall:
-            printf("Update authorized -> reboot\r\n");
+            printf("Update authorized -> reboot\n");
             cloud_client->update_authorize(MbedCloudClient::UpdateRequestInstall);
             break;
 
@@ -105,15 +105,15 @@ int main(void)
 
     status = mbed_trace_init();
     if (status != 0) {
-        printf("mbed_trace_init() failed with %d\r\n", status);
+        printf("mbed_trace_init() failed with %d\n", status);
         return -1;
     }
 
-    printf("Init KVStore\r\n");
+    printf("Init KVStore\n");
     // Mount default kvstore
     status = kv_init_storage_config();
     if (status != MBED_SUCCESS) {
-        printf("kv_init_storage_config() - failed, status %d\r\n", status);
+        printf("kv_init_storage_config() - failed, status %d\n", status);
         return -1;
     }
 
@@ -128,50 +128,50 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-    printf("Network connected\r\n");
+    printf("Network connected\n");
 
     // Run developer flow
-    printf("Using developer flow\r\n");
+    printf("Using developer flow\n");
     status = fcc_init();
     status = fcc_developer_flow();
     if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_KCM_FILE_EXIST_ERROR) {
-        printf("fcc_developer_flow() failed with %d\r\n", status);
+        printf("fcc_developer_flow() failed with %d\n", status);
         return -1;
     }
 
-    printf("Create resources\r\n");
+    printf("Create resources\n");
     M2MObjectList m2m_obj_list;
 
     // GET resource 3200/0/5501
     m2m_get_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3200, 0, 5501, M2MResourceInstance::INTEGER, M2MBase::GET_ALLOWED);
     if (m2m_get_res->set_value(0) != true) {
-        printf("m2m_get_res->set_value() failed\r\n");
+        printf("m2m_get_res->set_value() failed\n");
         return -1;
     }
 
     // PUT resource 3200/0/5500
     m2m_put_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3342, 0, 5500, M2MResourceInstance::INTEGER, M2MBase::GET_PUT_ALLOWED);
     if (m2m_put_res->set_value(0) != true) {
-        printf("m2m_led_res->set_value() failed\r\n");
+        printf("m2m_led_res->set_value() failed\n");
         return -1;
     }
     if (m2m_put_res->set_value_updated_function(put_update) != true) { // PUT sets led
-        printf("m2m_put_res->set_value_updated_function() failed\r\n");
+        printf("m2m_put_res->set_value_updated_function() failed\n");
         return -1;
     }
 
     m2m_post_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3342, 0, 5500, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
     if (m2m_post_res->set_execute_function(execute_post) != true) { // POST toggles led
-        printf("m2m_post_res->set_execute_function() failed\r\n");
+        printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
     }
 
-    printf("Starting Pelion Device Management Client\r\n");
+    printf("Starting Pelion Device Management Client\n");
     cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, update_authorize, update_progress);
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
-    printf("Application loop\r\n");
+    printf("Application loop\n");
     while(1) {
         int in_char = getchar();
         if (in_char == 'i') {
@@ -181,7 +181,7 @@ int main(void)
             button_press(); // Simulate button press
             continue;
         }
-        printf("Unregistering\r\n");
+        printf("Unregistering\n");
         cloud_client->close();
         while (cloud_client_registered == true) {
             wait(1);
