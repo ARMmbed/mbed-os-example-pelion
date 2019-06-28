@@ -109,7 +109,7 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-    printf("Network connected\n");
+    printf("Network connected with IP %s\n", network->get_ip_address());
 
     // Run developer flow
     printf("Using developer flow\n");
