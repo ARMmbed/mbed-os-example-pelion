@@ -23,7 +23,6 @@
 #include "m2mresource.h"                       // Required for M2MResource
 
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
-#include "mbed-trace-helper.h"                 // Required for mbed_trace_mutex_*
 
 // Pointers to the resources that will be created in main_application().
 static MbedCloudClient *cloud_client;
@@ -109,8 +108,6 @@ int main(void)
         printf("mbed_trace_init() failed with %d\r\n", status);
         return -1;
     }
-
-    mbed_trace_config_set(TRACE_ACTIVE_LEVEL_INFO); // trace level info
 
     printf("Init KVStore\r\n");
     // Mount default kvstore
