@@ -35,7 +35,7 @@ static M2MResource* m2m_post_res;
 void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
-    printf("Endpoint name: %s\n\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
+    printf("Endpoint name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
     printf("Device ID: %s\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
@@ -151,7 +151,7 @@ int main(void)
         return -1;
     }
 
-    printf("\nRegister Pelion Device Management Client\n");
+    printf("Register Pelion Device Management Client\n\n");
     cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
