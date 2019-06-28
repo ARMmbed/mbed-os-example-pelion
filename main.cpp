@@ -112,8 +112,12 @@ int main(void)
     printf("Network connected with IP %s\n", network->get_ip_address());
 
     // Run developer flow
-    printf("Using developer flow\n");
+    printf("Start developer flow\n");
     status = fcc_init();
+    if (status != FCC_STATUS_SUCCESS) {
+        printf("fcc_init() failed with %d\n", status);
+        return -1;
+    }
     status = fcc_developer_flow();
     if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_KCM_FILE_EXIST_ERROR) {
         printf("fcc_developer_flow() failed with %d\n", status);
