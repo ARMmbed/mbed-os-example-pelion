@@ -134,8 +134,8 @@ int main(void)
         return -1;
     }
 
-    // PUT resource 3200/0/5500
-    m2m_put_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3342, 0, 5500, M2MResourceInstance::INTEGER, M2MBase::GET_PUT_ALLOWED);
+    // PUT resource 3201/0/5853
+    m2m_put_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3201, 0, 5853, M2MResourceInstance::INTEGER, M2MBase::GET_PUT_ALLOWED);
     if (m2m_put_res->set_value(0) != true) {
         printf("m2m_led_res->set_value() failed\n");
         return -1;
@@ -145,7 +145,8 @@ int main(void)
         return -1;
     }
 
-    m2m_post_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3342, 0, 5500, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
+    // POST resource 3201/0/5850
+    m2m_post_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3201, 0, 5850, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
     if (m2m_post_res->set_execute_function(execute_post) != true) { // POST toggles led
         printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
