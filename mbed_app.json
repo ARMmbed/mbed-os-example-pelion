@@ -1,5 +1,8 @@
 {
     "macros": [
+        "MBED_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
+        "MBED_CLOUD_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
+        "PAL_USER_DEFINED_CONFIGURATION=\"pal_config_MbedOS.h\"",
         "MBED_BOOTLOADER_SIZE=(32*1024)",
         "ARM_UC_USE_PAL_BLOCKDEVICE=1"
     ],
@@ -34,6 +37,7 @@
             "lwip.mem-size"                             : 12500
         },
         "K64F": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-k64f-internal_flash-no_rot-v4.0.1.bin",
             "target.header_offset"                      : "0x8000",
@@ -51,6 +55,7 @@
             "storage.storage_type"                      : "TDB_INTERNAL"
         },
         "K66F": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-k66f-internal_flash-no_rot-v4.0.0.bin",
             "target.header_offset"                      : "0x8000",
@@ -66,6 +71,7 @@
             "storage.storage_type"                      : "TDB_INTERNAL"
         },
         "NUCLEO_F429ZI": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-nucleo_f429zi-internal_flash-no_rot-v4.0.0.bin",
             "target.header_offset"                      : "0x8000",
@@ -81,6 +87,7 @@
             "storage.storage_type"                      : "TDB_INTERNAL"
         },
         "UBLOX_EVK_ODIN_W2": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
             "target.network-default-interface-type"     : "WIFI",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-ublox_evk_odin_w2-block_device-kvstore-v4.0.0.bin",
             "target.header_offset"                      : "0x10000",
@@ -105,7 +112,7 @@
             "client_app.mbedtls-user-config-file"       : "\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"",
             "client_app.pal-user-defined-configuration" : "\"pal_config_non_trng_MbedOS.h\"",
             "target.extra_labels_add"                   : ["PSA"],
-            "target.macros_add"                         : ["MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED"],
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED"],
             "target.network-default-interface-type"     : "WIFI",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-nucleo_f411re-block_device-kvstore-v4.0.0.bin",
             "target.header_offset"                      : "0x10000",
