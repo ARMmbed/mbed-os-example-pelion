@@ -141,15 +141,5 @@
             "sd.SPI_CLK"                                : "PC_7",
             "sd.SPI_CS"                                 : "PB_9"
         }
-    },
-    "config": {
-        "button-pinname": {
-            "help"      : "PinName for button.",
-            "value"     : "BUTTON1"
-        },
-        "led-pinname"   : {
-            "help"      : "PinName for led, which is attached to led blink resource.",
-            "value"     : "LED_RED"
-        }
     }
 }
