@@ -17,6 +17,7 @@ limitations under the License.
 # pylint: disable=line-too-long,method-hidden
 
 import json
+import os
 import uuid
 import requests
 from mbed_cloud import AccountManagementAPI
@@ -49,8 +50,15 @@ class PelionBase(Bench):
         self.notified_value = ""
 
     def setup(self):
+        # Check if API key is in environmental vars
+        if os.environ['MBED_CLOUD_SDK_API_KEY']:
+            api_key = (os.environ[str('MBED_CLOUD_SDK_API_KEY')])
+            print("Reading api-key from environtment %", api_key)
+        else:
+            api_key = self.config.get("api_key")
+            print("Reading api-key from config %", api_key)
+
         self.device_id = self.config.get("device_id")
-        api_key = self.config.get("api_key")
         host = self.config.get("host")
         self.test_config = {"api_key": api_key, "host": host}
         self.account_api = AccountManagementAPI(self.test_config)
