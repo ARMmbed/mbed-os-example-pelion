@@ -36,13 +36,13 @@ void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
     printf("Endpoint name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
-    printf("Device ID: %s\n", cloud_client->endpoint_info()->endpoint_name.c_str());
+    printf("Device ID: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
 void button_press(void)
 {
     m2m_get_res->set_value(m2m_get_res->get_value_int() + 1);
-    printf("\nCounter %" PRId64, m2m_get_res->get_value_int());
+    printf("Counter %\n" PRId64, m2m_get_res->get_value_int());
 }
 
 void put_update(const char* /*object_name*/)
@@ -57,14 +57,14 @@ void execute_post(void* /*arguments*/)
 
 void client_registered(void)
 {
-    printf("Client registered: \n");
+    printf("Client registered.\n");
     print_client_ids();
     cloud_client_registered = true;
 }
 
 void client_unregistered(void)
 {
-    printf("Client unregistered\n");
+    printf("Client unregistered.\n");
     cloud_client_registered = false;
 }
 
@@ -162,6 +162,11 @@ int main(void)
         if (in_char == 'i') {
             print_client_ids(); // When 'i' is pressed, print endpoint info
             continue;
+        } else if (in_char == 'r') {
+            (void) fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
+            printf("Storage erased, rebooting the device.\n\n");
+            wait(1);
+            NVIC_SystemReset();
         } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
             button_press(); // Simulate button press
             continue;
