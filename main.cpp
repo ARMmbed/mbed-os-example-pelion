@@ -42,7 +42,7 @@ void print_client_ids(void)
 void button_press(void)
 {
     m2m_get_res->set_value(m2m_get_res->get_value_int() + 1);
-    printf("Counter %\n" PRId64, m2m_get_res->get_value_int());
+    printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
 }
 
 void put_update(const char* /*object_name*/)
