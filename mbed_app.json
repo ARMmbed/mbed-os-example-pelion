@@ -145,11 +145,6 @@
         }
     },
     "config": {
-        "developer-mode": {
-            "help"      : "Enable Developer mode to skip Factory enrollment",
-            "options"   : [null, 1],
-            "value"     : 1
-        },
         "button-pinname": {
             "help"      : "PinName for button.",
             "value"     : "BUTTON1"

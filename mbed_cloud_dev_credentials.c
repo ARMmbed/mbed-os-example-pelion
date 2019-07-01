@@ -19,9 +19,7 @@
 #ifndef __MBED_CLOUD_DEV_CREDENTIALS_H__
 #define __MBED_CLOUD_DEV_CREDENTIALS_H__
 
-#if defined(MBED_CONF_APP_DEVELOPER_MODE) && ( MBED_CONF_APP_DEVELOPER_MODE == 1)
 #error "Replace mbed_cloud_dev_credentials.c with your own developer cert."
-#endif
 
 #include <inttypes.h>
 
