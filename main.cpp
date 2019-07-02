@@ -26,7 +26,8 @@
 
 // Pointers to the resources that will be created in main_application().
 static MbedCloudClient *cloud_client;
-static bool cloud_client_registered = false;
+static bool cloud_client_running = true;
+static NetworkInterface *network = NULL;
 
 // Fake entropy needed for non-TRNG boards. Suitable only for demo devices.
 const uint8_t MBED_CLOUD_DEV_ENTROPY[] = { 0xf6, 0xd6, 0xc0, 0x09, 0x9e, 0x6e, 0xf2, 0x37, 0xdc, 0x29, 0x88, 0xf1, 0x57, 0x32, 0x7d, 0xde, 0xac, 0xb3, 0x99, 0x8c, 0xb9, 0x11, 0x35, 0x18, 0xeb, 0x48, 0x29, 0x03, 0x6a, 0x94, 0x6d, 0xe8, 0x40, 0xc0, 0x28, 0xcc, 0xe4, 0x04, 0xc3, 0x1f, 0x4b, 0xc2, 0xe0, 0x68, 0xa0, 0x93, 0xe6, 0x3a };
@@ -34,6 +35,7 @@ const uint8_t MBED_CLOUD_DEV_ENTROPY[] = { 0xf6, 0xd6, 0xc0, 0x09, 0x9e, 0x6e, 0
 static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
+static M2MResource* m2m_deregister_res;
 
 void print_client_ids(void)
 {
@@ -58,17 +60,29 @@ void execute_post(void* /*arguments*/)
     printf("POST executed\n");
 }
 
+void deregister_client(void)
+{
+    printf("Unregistering and disconnecting from the network.\n");
+    cloud_client->close();
+}
+
+void deregister(void* /*arguments*/)
+{
+    printf("POST deregister executed\n");
+    deregister_client();
+}
+
 void client_registered(void)
 {
     printf("Client registered.\n");
     print_client_ids();
-    cloud_client_registered = true;
 }
 
 void client_unregistered(void)
 {
     printf("Client unregistered.\n");
-    cloud_client_registered = false;
+    (void) network->disconnect();
+    cloud_client_running = false;
 }
 
 void client_error(int err)
@@ -102,7 +116,7 @@ int main(void)
 
     // Connect with NetworkInterface
     printf("Connect to network\n");
-    NetworkInterface *network = NetworkInterface::get_default_instance();
+    network = NetworkInterface::get_default_instance();
     if (network == NULL) {
         printf("Failed to get default NetworkInterface\n");
         return -1;
@@ -146,14 +160,21 @@ int main(void)
         printf("m2m_led_res->set_value() failed\n");
         return -1;
     }
-    if (m2m_put_res->set_value_updated_function(put_update) != true) { // PUT sets led
+    if (m2m_put_res->set_value_updated_function(put_update) != true) {
         printf("m2m_put_res->set_value_updated_function() failed\n");
         return -1;
     }
 
     // POST resource 3201/0/5850
     m2m_post_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3201, 0, 5850, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
-    if (m2m_post_res->set_execute_function(execute_post) != true) { // POST toggles led
+    if (m2m_post_res->set_execute_function(execute_post) != true) {
+        printf("m2m_post_res->set_execute_function() failed\n");
+        return -1;
+    }
+
+    // POST resource 5000/0/1 to trigger deregister.
+    m2m_deregister_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 5000, 0, 1, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
+    if (m2m_deregister_res->set_execute_function(deregister) != true) {
         printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
     }
@@ -163,7 +184,7 @@ int main(void)
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
-    while(1) {
+    while(cloud_client_running) {
         int in_char = getchar();
         if (in_char == 'i') {
             print_client_ids(); // When 'i' is pressed, print endpoint info
@@ -177,11 +198,7 @@ int main(void)
             button_press(); // Simulate button press
             continue;
         }
-        printf("Unregistering\n");
-        cloud_client->close();
-        while (cloud_client_registered == true) {
-            wait(1);
-        }
+        deregister_client();
         break;
     }
     return 0;
