@@ -19,12 +19,6 @@
             "update-client.storage-locations"           : 1,
             "mbed-trace.enable"                         : null,
             "events.shared-stacksize"                   : 2048,
-            "esp8266.rx"                                : "PTC3",
-            "esp8266.tx"                                : "PTC4",
-            "esp8266.rst"                               : "D8",
-            "esp8266.rts"                               : "PTC1",
-            "esp8266.cts"                               : "PTC2",
-            "esp8266.provide-default"                   : true,
             "nsapi.default-wifi-security"               : "WPA_WPA2",
             "nsapi.default-wifi-ssid"                   : "\"SSID\"",
             "nsapi.default-wifi-password"               : "\"PASSWORD\""
