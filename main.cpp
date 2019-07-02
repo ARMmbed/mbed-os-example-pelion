@@ -28,6 +28,9 @@
 static MbedCloudClient *cloud_client;
 static bool cloud_client_registered = false;
 
+// Fake entropy needed for non-TRNG boards. Suitable only for demo devices.
+const uint8_t MBED_CLOUD_DEV_ENTROPY[] = { 0xf6, 0xd6, 0xc0, 0x09, 0x9e, 0x6e, 0xf2, 0x37, 0xdc, 0x29, 0x88, 0xf1, 0x57, 0x32, 0x7d, 0xde, 0xac, 0xb3, 0x99, 0x8c, 0xb9, 0x11, 0x35, 0x18, 0xeb, 0x48, 0x29, 0x03, 0x6a, 0x94, 0x6d, 0xe8, 0x40, 0xc0, 0x28, 0xcc, 0xe4, 0x04, 0xc3, 0x1f, 0x4b, 0xc2, 0xe0, 0x68, 0xa0, 0x93, 0xe6, 0x3a };
+
 static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
@@ -118,8 +121,11 @@ int main(void)
         printf("fcc_init() failed with %d\n", status);
         return -1;
     }
+
+    // Inject hardcoded entropy for the device. Suitable only for demo devices.
+    (void) fcc_entropy_set(MBED_CLOUD_DEV_ENTROPY, sizeof(MBED_CLOUD_DEV_ENTROPY));
     status = fcc_developer_flow();
-    if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_KCM_FILE_EXIST_ERROR) {
+    if (status != FCC_STATUS_SUCCESS && status != FCC_STATUS_KCM_FILE_EXIST_ERROR && status != FCC_STATUS_CA_ERROR) {
         printf("fcc_developer_flow() failed with %d\n", status);
         return -1;
     }
