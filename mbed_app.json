@@ -126,6 +126,7 @@
             "events.shared-eventsize"                   : 1024,
             "drivers.uart-serial-rxbuf-size"            : 1024,
             "drivers.uart-serial-txbuf-size"            : 1024,
+            "target.components_add"                     : ["WIFI_IDW01M1"],
             "idw0xx1.provide-default"                   : true,
             "idw0xx1.tx"                                : "PA_9",
             "idw0xx1.rx"                                : "PA_10",
