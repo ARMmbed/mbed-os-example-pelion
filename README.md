@@ -9,17 +9,16 @@ Features:
 
 Because the point of this repository is to propose the change ideas, mbed-cloud-client patching is required before compilation.
 
-    mbed import new-mbed-os-pelion-example
-    cd new-mbed-os-pelion-example
-    git checkout -b reduced-configuration -t origin/reduced-configuration
+    mbed import mbed-os-pelion-example
+    cd mbed-os-pelion-example
     ./patch-mbed-cloud-client.sh
 
 # Compilation
 
     mbed target K64F
     mbed toolchain GCC_ARM
+    mbed device-management init -d arm.com --model-name example-app --force -q
     mbed compile
-    
 
 # Program Flow
 
@@ -28,3 +27,10 @@ Because the point of this repository is to propose the change ideas, mbed-cloud-
 1. Send enter through putty/minicom to simulate button
 1. Send 'i' to print endpoint name
 1. Send Ctrl-C through putty/minicom to unregister
+
+# Further information and requirements
+
+Check the public tutorial for further information:
+
+    https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html
+
