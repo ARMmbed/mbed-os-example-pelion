@@ -51,12 +51,13 @@ class PelionBase(Bench):
 
     def setup(self):
         # Check if API key is in environmental vars
-        if os.environ['MBED_CLOUD_SDK_API_KEY']:
+        if 'MBED_CLOUD_SDK_API_KEY' in os.environ:
             api_key = (os.environ[str('MBED_CLOUD_SDK_API_KEY')])
-            print("Reading api-key from environtment %", api_key)
         else:
             api_key = self.config.get("api_key")
-            print("Reading api-key from config %", api_key)
+
+        if not api_key.startswith('ak_'):
+            raise TestStepFail("No API key in MBED_CLOUD_SDK_API_KEY or in pelion.tc_cfg")
 
         self.device_id = self.config.get("device_id")
         host = self.config.get("host")
@@ -66,7 +67,7 @@ class PelionBase(Bench):
         self.device_api = DeviceDirectoryAPI(self.test_config)
 
         # Additional parameters for handling REST requests without SDK
-        self.rest_headers = {'Authorization': 'Bearer ' + self.config.get("api_key")}
+        self.rest_headers = {'Authorization': 'Bearer ' + api_key}
         self.rest_address = self.config.get("host")
 
         # Init delay due to internal usage of PULL notification in SDK. Notications might be lost between

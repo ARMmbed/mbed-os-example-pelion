@@ -17,7 +17,30 @@ There are two different test sets:
 pip install icetea mbed-cloud-sdk
 ```
 
+## Basic usage for Mbed OS (serial dependency)
+
+These Mbed OS specific tests use the serial console to read the `device_id` automatically from console output.
+
+1. Define environmental variable `MBED_CLOUD_SDK_API_KEY` with your [API key](https://cloud.mbed.com/docs/current/integrate-web-app/api-keys.html) as the value. Alternatively add your API key to `TESTS/pelion.tc_cfg`.
+1. Verify with `mbed ls` that the device is connected via serial and mounted.
+
+### Running the test suite
+
+To run the test suite, use the following command:
+
+```
+icetea --suite basic_os_tests.json --suitedir TESTS/ --tcdir ./TESTS/ --tc_cfg TESTS/pelion.tc_cfg --reset
+```
+
+If you have prepared a manifest (see below the instructions for `device_update` testcase), you can run the full suite with:
+
+```
+icetea --suite full_os_tests.json --suitedir TESTS/ --tcdir ./TESTS/ --tc_cfg TESTS/pelion.tc_cfg --reset
+```
+
 ## Basic usage
+
+These generic tests do not depend on console.
 
 1. Register your device to Device Management. For examples, see the [tutorials](https://cloud.mbed.com/docs/current/connecting/device-management-client-tutorials.html).
 1. Enter your [device_id](https://cloud.mbed.com/docs/current/connecting/device-identity.html) to `TESTS/pelion.tc_cfg`.
@@ -50,6 +73,7 @@ icetea --tc basic_get --tcdir ./TESTS/ --tc_cfg TESTS/pelion.tc_cfg
 | Test name        | Main functions                             | Notes                                 |
 | ---------------- | ------------------------------------------ | --------------------------------------|
 | `register`       | Verify that the device is registered.      |                                       |
+| `register_and_read_id` | Verify that the device is registered. | Uses serial to read the `device_id`. Mbed OS only. |
 | `get`            | Verify that the device responds to GET.    | Uses OMA resource `/3/0/0`            |
 | `put`            | Verify that the device responds to PUT.    | Uses custom resource `/3201/0/5853`   |
 | `post`           | Verify that the device responds to POST.   | Uses custom resource `/3201/0/5850`   |

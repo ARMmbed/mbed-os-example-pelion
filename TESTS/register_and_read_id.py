@@ -61,11 +61,11 @@ class Testcase(PelionBase):
                     pass
 
         # Get the endpoint from the logs
-        print(self.duts[0].traces)
+        self.logger.info("Reading device ID from console.")
         dev_id_raw = ""
         dev_id_raw = list(filter(lambda x: "Device ID" in x, self.duts[0].traces))
         device_id = dev_id_raw[0].split()[2]
-        print("Writing Device ID % to pelion.tc_cfg", device_id)
+        self.logger.info("Writing Device ID %s to pelion.tc_cfg", device_id)
         # Store the Device ID to pelion.tc_cfg
         with open("TESTS/pelion.tc_cfg") as stream:
             data = json.load(stream)
