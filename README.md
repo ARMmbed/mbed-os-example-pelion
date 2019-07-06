@@ -34,3 +34,10 @@ Check the public tutorial for further information:
 
     https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html
 
+# Troubleshooting
+
+- Device initializes but can't register to Pelion
+
+  Error: `client_error(3) -> Bootstrap server URL is not correctly formed`
+  
+  Solution: Format the the storage by pressing 'r' in the serial terminal.
