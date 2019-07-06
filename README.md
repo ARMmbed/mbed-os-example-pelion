@@ -25,6 +25,20 @@ Ublox UBLOX_EVK_ODIN_W2           | WiFi               | SD card         |
 
 This section is intended for developers to get started, import the example application, compile and get it running on their device.
 
+## Requirements
+
+- Mbed CLI >= 1.10.0
+  
+  For instruction on installing and using Mbed CLI, please see our [documentation](https://os.mbed.com/docs/mbed-os/latest/tools/developing-mbed-cli.html).
+  
+- Install the `CLOUD_SDK_API_KEY`
+
+   `mbed config -G CLOUD_SDK_API_KEY ak_1MDE1...<snip>`
+
+   You should generate your own API key. Pelion Device Management is available for any Mbed developer. Create a [free trial](https://os.mbed.com/pelion-free-tier).
+
+   For instructions on how to generate your API key, please see our [documentation](https://cloud.mbed.com/docs/current/integrate-web-app/api-keys.html#generating-an-api-key). 
+
 ## Deploying
 
 This repository is in the process of being updated and depends on few enhancements being deployed in mbed-cloud-client. In the meantime, follow these steps to import and apply the patches before compiling.
