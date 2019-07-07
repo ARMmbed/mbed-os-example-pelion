@@ -11,13 +11,13 @@ Note this is considered alpha with early access to partners.
 
 This table shows a list of platforms that are supported.
 
-Platform                          |  Connectivity      | Storage         | Notes          
-----------------------------------| -------------------| ----------------| --------------  
-NXP K64F                          | Ethernet           | Internal Flash  | 
-NXP K66F                          | Ethernet           | Internal Flash  |   
-ST NUCLEO_F429ZI                  | Ethernet           | Internal Flash  |   
-ST NUCLEO_F411RE                  | WiFi IDW01M1       | SD card         |
-Ublox UBLOX_EVK_ODIN_W2           | WiFi               | SD card         | 
+Platform                          |  Connectivity     | Storage for credentials  | Storage for FW candidate | Notes          
+----------------------------------| ------------------| -------------------------| -----------------------  | --------------  
+NXP K64F                          | Ethernet          | Internal Flash           |  Internal Flash          |                
+NXP K66F                          | Ethernet          | Internal Flash           |  Internal Flash          |
+ST NUCLEO_F429ZI                  | Ethernet          | Internal Flash           |  Internal Flash          |
+ST NUCLEO_F411RE                  | WiFi IDW01M1      | SD card                  |  SD card                 |
+Ublox UBLOX_EVK_ODIN_W2           | WiFi              | SD card                  |  SD card                 |
 
 <span class="notes">**(*) Note**: the platforms require further testing</span>
 
@@ -29,7 +29,7 @@ This section is intended for developers to get started, import the example appli
 
 - Mbed CLI >= 1.10.0
   
-  For instruction on installing and using Mbed CLI, please see our [documentation](https://os.mbed.com/docs/mbed-os/latest/tools/developing-mbed-cli.html).
+  For instructions on installing and using Mbed CLI, please see our [documentation](https://os.mbed.com/docs/mbed-os/latest/tools/developing-mbed-cli.html).
   
 - Install the `CLOUD_SDK_API_KEY`
 
@@ -78,117 +78,129 @@ Check the public tutorial for further information:
   
   Solution: Format the the storage by pressing 'r' in the serial terminal.
   
-# Porting process for new platforms
+# Porting process to add new platforms
 
 ## 1. Application configuration
 
-### Recomentations:
-
-Credentials should be installed on internal flash. Whenever possible, internal flash should also be used to store the candidate image for the FW update process, however, if there is no enough space, you may need to enable external storage (SD Card, SPI, etc).
+<span class="notes">**Note**: consider allocating the credentials on internal flash to simplify the application setup process. In addition, try to use internal flash to store the firmware candidate image for the FW update process as this would remove the need to use external components. If there isn't enough space, you may need to enable external storage (SD Card, SPI, etc).</span>
 
 Mbed OS platforms should have a default configuration for connectivity and storage in Mbed OS (`targets.json`).
-You can extend or override the default configuration in `mbed_app.json`. Create a new entry under the target name for your device.
+You can extend or override the default configuration using `mbed_app.json` in this application. Create a new entry under the target name for your device.
 
-- **Connectivity** - Specify the default connectivity type for your target. It's essential with targets that lack default connectivity set in `targets.json` or for targets that support multiple connectivity options. For example:
+### a. Connectivity
+
+  Specify the default connectivity type for your target. It's essential with targets that lack default connectivity set in `targets.json` or for targets that support multiple connectivity options. For example:
    
-   ```
-            "target.network-default-interface-type" : "ETHERNET",
-   ```
+      "target.network-default-interface-type" : "ETHERNET",```
       
-   The possible options are `ETHERNET`, `WIFI` and `CELLULAR`.
+  The possible options are `ETHERNET`, `WIFI` and `CELLULAR`.
    
-   Depending on connectivity type, you might have to specify more config options.
+  Depending on connectivity type, you might have to specify more configuration options. Review the [documentation](https://os.mbed.com/docs/mbed-os/latest/porting/porting-connectivity.html) for further information.
 
-- **Storage** - Specify the storage block device type, which dynamically adds the block device driver you specified at compile time. For example:
+### b. Storage for credentials
 
-   ```
-            "target.components_add" : ["SD"],
-   ```
+  Start by getting familiar with the multiple [storage options](https://os.mbed.com/docs/mbed-os/latest/reference/storage.html) and configurations supported in Mbed OS.
 
-   Valid options are `SD`, `SPIF`, `QSPIF` and `FLASHIAP` (not recommended). For more available options, please see the [block device components](https://github.com/ARMmbed/mbed-os/tree/master/components/storage/blockdevice).
+  Then start designing the system memory map, the location of components (whether they are on internal or external memory), the corresponding base addresses and sizes. You may want to use a diagram similar to the one below to help you to make decisions. In this case the configuration for the board stores credentials in uses internal flash (KVSTORE/TDB_INTERNAL). The flash regions are as follows::
 
-   You also have to specify block device pin configuration, which may vary from one block device type to another. Here's an example for `SD`:
-      
-   ```
-            "sd.SPI_MOSI"                      : "PE_6",
-            "sd.SPI_MISO"                      : "PE_5",
-            "sd.SPI_CLK"                       : "PE_2",
-            "sd.SPI_CS"                        : "PE_4",
-   ```
+  (1) Bootloader - 32KiB from the beginning of flash <br />
+  (2) Active App Metadata Header - (1KiB/2KiB) from the end of KVSTORE <br />
+  (3) Active App - From end of header to the end of flash <br />
+  (4) KVSTORE - 2 flash sectors <br />
+  
+    "+--------------------------+",
+    "|                          |",
+    "|         KVSTORE          |",
+    "|                          |",
+    "+--------------------------+ <-+ storage_tdb_internal.internal_base_address",
+    "|                          |",
+    "|        Free space        |",
+    "|                          |",
+    "+--------------------------+",
+    "|                          |",
+    "|                          |",
+    "|                          |",
+    "|        Active App        |",
+    "|                          |",
+    "|                          |",
+    "|                          |",
+    "+--------------------------+ <-+ mbed-bootloader.application-start-address",
+    "|Active App Metadata Header|",
+    "+--------------------------+ <-+ update-client.application-details",
+    "|                          |",
+    "|        Bootloader        |",
+    "|                          |",
+    "+--------------------------+ <-+ 0"
+
+  - Allocating credentials in internal memory
+    
+    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is type of storage is selected in `mbed_app.json`. Specify the base address depending on the available memory for the whole system. The size of this section should be aligned with the flash erase sector and allocate a mininum of 50KB aproximately. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+
+        "storage.storage_type"                      : "TDB_INTERNAL" 
+        "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
+        "storage_tdb_internal.internal_size"        : "(128*1024)",
+
+  - Allocating credentials in external memory:
+    
+    This is possible when the platform has an storage device wired to the MCU (could be on-board or external component). Make sure `FILESYSTEM` is specified as type of storage. The blockdevice and filesystem should be one of the supported in Mbed OS (see [docs](https://os.mbed.com/docs/mbed-os/latest/porting/blockdevice-port.html)).
+    
+    An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
+    
+        "storage.storage_type"                      : "FILESYSTEM",
+        "storage_filesystem.blockdevice"            : "SD",
+        "storage_filesystem.filesystem"             : "LITTLE",
+        "storage_filesystem.internal_base_address"  : "(32*1024)",
+        "storage_filesystem.rbp_internal_size"      : "(8*1024)",
+        "storage_filesystem.external_base_address"  : "(0x0)",
+        "storage_filesystem.external_size"          : "(1024*1024*64)",
+
+### c. Storage for firmware updates
+
+  This is required when enabling the platform to support FW update. The configuration for the application in this section should match with the one on the bootloader section below.
+    
+  - Common configuration
+  
+    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` values, as well as the `header` and application offset (`app_offset`). The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+  
+        "update-client.application-details"         : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
+        "update-client.bootloader-details"          : "<TBD later>",
+        "target.bootloader_img"                     : "bootloader/mbed-bootloader-<target>",
+        "target.header_offset"                      : "0x8000",
+        "target.app_offset"                         : "0x8400",
+    
+  - Allocating the firmware update candidate in internal memory
+
+    **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the end of the bootloader. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+    
+        "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
+        "update-client.storage-address"             : "(MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS+MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
+        "update-client.storage-size"                : "(1024*1024-MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
+        "update-client.storage-page"                : 1,
+
+  - Allocating the firmware update candidate in external memory
+  
+  When using an external device to the MCU to store the firmware candidate, make sure `ARM_UCP_FLASHIAP_BLOCKDEVICE` is specified as type of `update-storage`. Specify the `storage-address`, `storage-size` and `storage-page` as required.
+    
+  An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
+    
+        "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+        "update-client.storage-address"             : "(1024*1024*64)",
+        "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
    
-    If you are using SPI/QSPI flash, please make sure you have specified the correct SPI frequency by configuring `spif-driver.SPI_FREQ`. If it is not configured, 40Mhz will be applied by default.
-   
-- **Flash** - Define the basics for the microcontroller flash. For example:
-   
-   ```
-            "device-management.flash-start-address"              : "0x08000000",
-            "device-management.flash-size"                       : "(2048*1024)",
-   ```
-   
-- **SOTP** --> **TODO: REPLACE by KVSTORE**
-
-Define two SOTP or NVStore regions that Mbed OS Device Management will use to store its special keys, which encrypt the data stored. Use the last two Flash sectors (if possible) to ensure that they don't get overwritten when new firmware is applied. For example:
-
-   ```
-            "device-management.sotp-section-1-address"            : "(MBED_CONF_APP_FLASH_START_ADDRESS + MBED_CONF_APP_FLASH_SIZE - 2*(128*1024))",
-            "device-management.sotp-section-1-size"               : "(128*1024)",
-            "device-management.sotp-section-2-address"            : "(MBED_CONF_APP_FLASH_START_ADDRESS + MBED_CONF_APP_FLASH_SIZE - 1*(128*1024))",
-            "device-management.sotp-section-2-size"               : "(128*1024)",
-            "device-management.sotp-num-sections" : 2
-   ```
-
-`*-address` defines the start of the Flash sector, and `*-size` defines the actual sector size. `sotp-num-sections` should always be set to `2`.
-
-
 ## 2. Bootloader configuration
 
 The bootloader is required to perform FW Updates. The steps below explain how to create a new configuration and binary for the bootloader.
 
-1. Import as a new application the official [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository or the [mbed-bootloader-extended](https://github.com/ARMmbed/mbed-bootloader-extended/) repository that builds on top of `mbed-bootloader` and extends the support for file systems and storage drivers. You can do this with `mbed import mbed-bootloader-extended`.
+1. Import as a new application the official [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository or the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader).
 
-1. Inside the imported bootloader application, and edit the application configuration, for example `mbed-bootloader-extended/mbed_app.json`. Add a new target entry similar to the step above, and specify:
+1. Edit the bootloader application configuration in this example, for example `bootloader/bootloader_app.json`. Add a new target entry similar:
 
-   - **Flash** - Define the basics for the microcontroller flash (the same as in `mbed_app.json`). For example:
-   
-      ```
-            "flash-start-address"              : "0x08000000",
-            "flash-size"                       : "(2048*1024)",
-      ```
-
-   - **SOTP** --> **TODO: REPLACE by KVSTORE**
-   
-   Similar to the **SOTP** step above, specify the location of the SOTP key storage. In the bootloader, the variables are named differently. Try to use the last two Flash sectors (if possible) to ensure that they don't get overwritten when new firmware is applied. For example:
-   
-    ```
-            "nvstore.area_1_address"           : "(MBED_CONF_APP_FLASH_START_ADDRESS + MBED_CONF_APP_FLASH_SIZE - 2*(128*1024))",
-            "nvstore.area_1_size"              : "(128*1024)",
-            "nvstore.area_2_address"           : "(MBED_CONF_APP_FLASH_START_ADDRESS + MBED_CONF_APP_FLASH_SIZE - 1*(128*1024))", "nvstore.area_2_size" : "(128*1024)",
-    ```
-
-    - **Application offset** - Specify start address for the application, and also the update-client meta information. As these are automatically calculated, you can copy the ones below:
-    
-    ```
-            "update-client.application-details": "(MBED_CONF_APP_FLASH_START_ADDRESS + 64*1024)",
-            "application-start-address"        : "(MBED_CONF_APP_FLASH_START_ADDRESS + 65*1024)",
-            "max-application-size"             : "DEFAULT_MAX_APPLICATION_SIZE",
-    ```
-    
-    - **Storage** - Specify the block device pin configuration, exactly as you defined it in the `mbed_app.json` file. For example:
-    
-    ```
-            "target.components_add"            : ["SD"],
-            "sd.SPI_MOSI"                      : "PE_6",
-            "sd.SPI_MISO"                      : "PE_5",
-            "sd.SPI_CLK"                       : "PE_2",
-            "sd.SPI_CS"                        : "PE_4"
-    ```
-    
-    If you are using SPI/QSPI flash, please make sure you have specified the correct SPI frequency by configuring `spif-driver.SPI_FREQ`. If it is not configured, 40Mhz will be applied by default.
+   <PENDING TO DO>   
     
 1. Compile the bootloader using the `bootloader_app.json` configuration you just edited:
 
    ```
-   $ mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=<path to mbed-os-pelion-example/bootloader/bootloader_app.json>
+   $ mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>
    ```
 
 <span class="notes">**Note:** `mbed-bootloader` is primarily optimized for `GCC_ARM`, so you may want to compile it with that toolchain.
@@ -198,7 +210,7 @@ Before jumping to the next step, you should compile and flash the bootloader and
 
 1. Copy the compiled bootloader from `mbed-bootloader/BUILDS/<TARGET>/<TOOLCHAIN>-TINY/mbed-bootloader.bin` to `<your_application_name>/bootloader/mbed-bootloader-<TARGET>.bin`.
 
-1. Edit `<your_application_name>/mbed_app.json`, and modify the target entry to include:
+1. Edit `mbed-os-pelion-example/mbed_app.json`, and modify the target entry to include:
 
    ```
             "target.features_add"              : ["BOOTLOADER"],
