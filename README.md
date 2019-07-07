@@ -5,7 +5,7 @@ This is a simplified example with the following features:
 - Support for FW Update
 - 200 lines of codes + credential sources
 
-Note this is considered alpha with early access to partners.
+Note this application is considered **alpha** and given early access to Mbed Partners.
 
 ## Supported platforms
 
@@ -82,16 +82,16 @@ Check the public tutorial for further information:
 
 ## 1. Application configuration
 
-<span class="notes">**Note**: consider allocating the credentials on internal flash to simplify the application setup process. In addition, try to use internal flash to store the firmware candidate image for the FW update process as this would remove the need to use external components. If there isn't enough space, you may need to enable external storage (SD Card, SPI, etc).</span>
+<span class="notes">**Note**: consider allocating the credentials on internal flash to simplify the application setup process. In addition, consider the use of internal flash to store the firmware candidate image for the FW update process as this would remove the need to use external components. If there isn't enough space, you may need to enable external storage (SD Card, SPI, etc).</span>
 
 Mbed OS platforms should have a default configuration for connectivity and storage in Mbed OS (`targets.json`).
 You can extend or override the default configuration using `mbed_app.json` in this application. Create a new entry under the target name for your device.
 
 ### a. Connectivity
 
-  Specify the default connectivity type for your target. It's essential with targets that lack default connectivity set in `targets.json` or for targets that support multiple connectivity options. For example:
+  Specify the default IP connectivity type for your target. It's essential with targets that lack default connectivity set in `targets.json` or for targets that support multiple connectivity options. For example:
    
-      "target.network-default-interface-type" : "ETHERNET",```
+      "target.network-default-interface-type" : "ETHERNET",
       
   The possible options are `ETHERNET`, `WIFI` and `CELLULAR`.
    
@@ -101,12 +101,12 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Start by getting familiar with the multiple [storage options](https://os.mbed.com/docs/mbed-os/latest/reference/storage.html) and configurations supported in Mbed OS.
 
-  Then start designing the system memory map, the location of components (whether they are on internal or external memory), the corresponding base addresses and sizes. You may want to use a diagram similar to the one below to help you to make decisions. In this case the configuration for the board stores credentials in uses internal flash (KVSTORE/TDB_INTERNAL). The flash regions are as follows::
+  Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions. In this case the configuration for the board stores credentials in internal flash (KVSTORE/TDB_INTERNAL). The flash regions are described as follows::
 
-  (1) Bootloader - 32KiB from the beginning of flash <br />
-  (2) Active App Metadata Header - (1KiB/2KiB) from the end of KVSTORE <br />
-  (3) Active App - From end of header to the end of flash <br />
-  (4) KVSTORE - 2 flash sectors <br />
+  (1) Bootloader - 32KB from the beginning of flash <br />
+  (2) Active App Metadata Header - (1KB/2KB) from the end of bootloader <br />
+  (3) Active App - From end of header <br />
+  (4) KVSTORE - 2 flash sectors - recomended to be placed at the end of flash to avoid overwrites during flash of binary programming <br />
   
     "+--------------------------+",
     "|                          |",
@@ -132,15 +132,15 @@ You can extend or override the default configuration using `mbed_app.json` in th
     "|                          |",
     "+--------------------------+ <-+ 0"
 
-  - Allocating credentials in internal memory
+  - **Option 1:** Allocating credentials in internal memory
     
-    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is type of storage is selected in `mbed_app.json`. Specify the base address depending on the available memory for the whole system. The size of this section should be aligned with the flash erase sector and allocate a mininum of 50KB aproximately. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is type of storage is selected in `mbed_app.json`. Specify the base address depending on the available memory for the whole system. The size of this section should be aligned with the flash erase sector and allocate a mininum of 50KB aproximately. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform in this application.
 
         "storage.storage_type"                      : "TDB_INTERNAL" 
         "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
         "storage_tdb_internal.internal_size"        : "(128*1024)",
 
-  - Allocating credentials in external memory:
+  - **Option 2:** Allocating credentials in external memory:
     
     This is possible when the platform has an storage device wired to the MCU (could be on-board or external component). Make sure `FILESYSTEM` is specified as type of storage. The blockdevice and filesystem should be one of the supported in Mbed OS (see [docs](https://os.mbed.com/docs/mbed-os/latest/porting/blockdevice-port.html)).
     
@@ -156,28 +156,43 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
 ### c. Storage for firmware updates
 
-  This is required when enabling the platform to support FW update. The configuration for the application in this section should match with the one on the bootloader section below.
-    
+  Before enabling FW updates, it's recomended that the application is able to initialize the network and connect to Pelion DM.
+  
+  Once the connection is successfull, you tan follow the steps below to enable the platform to receive FW updates. Note the configuration for the application in this section should match with the one on the bootloader - see section below.
+   
   - Common configuration
   
-    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` values, as well as the `header` and application offset (`app_offset`). The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` options. The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output. Review the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader#configurations) guidelines on how these options should be selected.
+    
+    Review the [bootloader configuration](2.-Bootloader-configuration) section below.
+    
+    Copy the compiled bootloader from `mbed-bootloader/BUILDS/<TARGET>/<TOOLCHAIN>-TINY/mbed-bootloader.bin` to `bootloader/mbed-bootloader-<TARGET>.bin`.
+
+    Edit `mbed-os-pelion-example/mbed_app.json` and modify the target configuration to match with the one in `bootloader_app.json`.
+
+   <span class="notes">**Note:**    
+      - `update-client.application-details` should be identical in both `bootloader_app.json` and `mbed_app.json`.
+      - `target.app_offset` is relative offset to `flash-start-address` you specified in `mbed_app.json` and `bootloader_app.json`, and is the hex value of the offset specified by `application-start-address` in `bootloader_app.json`. For example,  `(MBED_CONF_APP_FLASH_START_ADDRESS+65*1024)` dec equals `0x10400` hex.
+      - `target.header_offset` is also relative offset to the `flash-start-address` you specified in the `bootloader_app.json`, and is the hex value of the offset specified by `update-client.application-details`. For example, `(MBED_CONF_APP_FLASH_START_ADDRESS+64*1024)` dec equals `0x10000` hex.</span>
+      
+  An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
   
         "update-client.application-details"         : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
-        "update-client.bootloader-details"          : "<TBD later>",
+        "update-client.bootloader-details"          : "0x08007300",
         "target.bootloader_img"                     : "bootloader/mbed-bootloader-<target>",
         "target.header_offset"                      : "0x8000",
         "target.app_offset"                         : "0x8400",
     
-  - Allocating the firmware update candidate in internal memory
+  - **Option 1:** Allocating the firmware update candidate in internal memory
 
-    **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the end of the bootloader. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+    **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash after the KVSTORE area. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the bootloader area. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
     
         "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
         "update-client.storage-address"             : "(MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS+MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
         "update-client.storage-size"                : "(1024*1024-MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
         "update-client.storage-page"                : 1,
 
-  - Allocating the firmware update candidate in external memory
+  - **Option 2:** Allocating the firmware update candidate in external memory
   
   When using an external device to the MCU to store the firmware candidate, make sure `ARM_UCP_FLASHIAP_BLOCKDEVICE` is specified as type of `update-storage`. Specify the `storage-address`, `storage-size` and `storage-page` as required.
     
@@ -193,37 +208,19 @@ The bootloader is required to perform FW Updates. The steps below explain how to
 
 1. Import as a new application the official [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository or the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader).
 
-1. Edit the bootloader application configuration in this example, for example `bootloader/bootloader_app.json`. Add a new target entry similar:
+1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry.
 
-   <PENDING TO DO>   
+  <TODO>
     
-1. Compile the bootloader using the `bootloader_app.json` configuration you just edited:
+1. Compile the bootloader using the `bootloader_app.json` configuration you've just edited:
 
    ```
    $ mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>
    ```
 
 <span class="notes">**Note:** `mbed-bootloader` is primarily optimized for `GCC_ARM`, so you may want to compile it with that toolchain.
-Before jumping to the next step, you should compile and flash the bootloader and then connect over the virtual comport to ensure the bootloader is running correctly. You can ignore errors related to checksum verification or falure to jump to application - these are expected at this stage.</span>
+Before jumping to the next step, you should compile and flash the bootloader and then connect over the virtual serial port to ensure the bootloader is running correctly. You can ignore errors related to checksum verification or falure to jump to application - these are expected at this stage.</span>
 
-### 3. Add the bootloader to your application
-
-1. Copy the compiled bootloader from `mbed-bootloader/BUILDS/<TARGET>/<TOOLCHAIN>-TINY/mbed-bootloader.bin` to `<your_application_name>/bootloader/mbed-bootloader-<TARGET>.bin`.
-
-1. Edit `mbed-os-pelion-example/mbed_app.json`, and modify the target entry to include:
-
-   ```
-            "target.features_add"              : ["BOOTLOADER"],
-            "target.bootloader_img"            : "bootloader/mbed-bootloader-<TARGET>.bin",
-            "target.app_offset"                : "0x10400",
-            "target.header_offset"             : "0x10000",
-            "update-client.application-details": "(MBED_CONF_APP_FLASH_START_ADDRESS + 64*1024)",
-   ```
- 
-   <span class="notes">**Note:**    
-      - `update-client.application-details` should be identical in both `bootloader_app.json` and `mbed_app.json`.
-      - `target.app_offset` is relative offset to `flash-start-address` you specified in `mbed_app.json` and `bootloader_app.json`, and is the hex value of the offset specified by `application-start-address` in `bootloader_app.json`. For example,  `(MBED_CONF_APP_FLASH_START_ADDRESS+65*1024)` dec equals `0x10400` hex.
-      - `target.header_offset` is also relative offset to the `flash-start-address` you specified in the `bootloader_app.json`, and is the hex value of the offset specified by `update-client.application-details`. For example, `(MBED_CONF_APP_FLASH_START_ADDRESS+64*1024)` dec equals `0x10000` hex.</span>
 
 ## Validation and testing
 
