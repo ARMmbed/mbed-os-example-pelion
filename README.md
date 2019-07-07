@@ -101,36 +101,38 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Start by getting familiar with the multiple [storage options](https://os.mbed.com/docs/mbed-os/latest/reference/storage.html) and configurations supported in Mbed OS.
 
-  Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions. In this case the configuration for the board stores credentials in internal flash (KVSTORE/TDB_INTERNAL). The flash regions are described as follows::
-
-  (1) Bootloader - 32KB from the beginning of flash <br />
-  (2) Active App Metadata Header - (1KB/2KB) from the end of bootloader <br />
-  (3) Active App - From end of header <br />
-  (4) KVSTORE - 2 flash sectors - recomended to be placed at the end of flash to avoid overwrites during flash of binary programming <br />
+  Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions. In this case the configuration for the board stores credentials in internal flash (KVSTORE/TDB_INTERNAL). The flash regions are described as follows:
   
-    "+--------------------------+",
-    "|                          |",
-    "|         KVSTORE          |",
-    "|                          |",
-    "+--------------------------+ <-+ storage_tdb_internal.internal_base_address",
-    "|                          |",
-    "|        Free space        |",
-    "|                          |",
-    "+--------------------------+",
-    "|                          |",
-    "|                          |",
-    "|                          |",
-    "|        Active App        |",
-    "|                          |",
-    "|                          |",
-    "|                          |",
-    "+--------------------------+ <-+ mbed-bootloader.application-start-address",
-    "|Active App Metadata Header|",
-    "+--------------------------+ <-+ update-client.application-details",
-    "|                          |",
-    "|        Bootloader        |",
-    "|                          |",
-    "+--------------------------+ <-+ 0"
+    +--------------------------+
+    |                          |
+    |                          |
+    |                          |
+    |Firmware Candidate Storage|
+    |                          |
+    |                          |
+    |                          |
+    +--------------------------+ <-+ update-client.storage-address
+    |                          |
+    |         KVSTORE          |
+    |                          |
+    +--------------------------+ <-+ storage_tdb_internal.internal_base_address
+    |                          |
+    |        Free space        |
+    |                          |
+    +--------------------------+
+    |                          |
+    |                          |
+    |        Active App        |
+    |                          |
+    |                          |
+    |                          |
+    +--------------------------+ <-+ mbed-bootloader.application-start-address
+    |Active App Metadata Header|
+    +--------------------------+ <-+ update-client.application-details
+    |                          |
+    |        Bootloader        |
+    |                          |
+    +--------------------------+ <-+ 0
 
   - **Option 1:** Allocating credentials in internal memory
     
@@ -170,10 +172,13 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
     Edit `mbed-os-pelion-example/mbed_app.json` and modify the target configuration to match with the one in `bootloader_app.json`.
 
-   <span class="notes">**Note:**    
-      - `update-client.application-details` should be identical in both `bootloader_app.json` and `mbed_app.json`.
-      - `target.app_offset` is relative offset to `flash-start-address` you specified in `mbed_app.json` and `bootloader_app.json`, and is the hex value of the offset specified by `application-start-address` in `bootloader_app.json`. For example,  `(MBED_CONF_APP_FLASH_START_ADDRESS+65*1024)` dec equals `0x10400` hex.
-      - `target.header_offset` is also relative offset to the `flash-start-address` you specified in the `bootloader_app.json`, and is the hex value of the offset specified by `update-client.application-details`. For example, `(MBED_CONF_APP_FLASH_START_ADDRESS+64*1024)` dec equals `0x10000` hex.</span>
+   <span class="notes">**Note:**
+
+  - `update-client.application-details` should be identical in both `bootloader_app.json` and `mbed_app.json`.
+
+  - `target.app_offset` is relative offset to `flash-start-address` you specified in `mbed_app.json` and `bootloader_app.json`, and is the hex value of the offset specified by `application-start-address` in `bootloader_app.json`. For example,  `(MBED_CONF_APP_FLASH_START_ADDRESS+65*1024)` dec equals `0x10400` hex.
+
+  - `target.header_offset` is also relative offset to the `flash-start-address` you specified in the `bootloader_app.json`, and is the hex value of the offset specified by `update-client.application-details`. For example, `(MBED_CONF_APP_FLASH_START_ADDRESS+64*1024)` dec equals `0x10000` hex.</span>
       
   An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
   
@@ -206,17 +211,25 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
 The bootloader is required to perform FW Updates. The steps below explain how to create a new configuration and binary for the bootloader.
 
-1. Import as a new application the official [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository or the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader).
+1. Import as a new application the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository.
 
-1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry.
+1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform:
 
-  <TODO>
+       "update-client.firmware-header-version": "2",
+       "mbed-bootloader.use-kvstore-rot": 0,
+       "mbed-bootloader.bootloader-size": "APPLICATION_SIZE",
+       "update-client.application-details"        : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
+       "mbed-bootloader.application-start-address": "(MBED_CONF_UPDATE_CLIENT_APPLICATION_DETAILS + MBED_BOOTLOADER_ACTIVE_HEADER_REGION_SIZE)",
+       "mbed-bootloader.max-application-size"     : "(MBED_ROM_START + MBED_BOOTLOADER_FLASH_BANK_SIZE - MBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS)",
+       "update-client.storage-address"            : "(MBED_ROM_START + MBED_BOOTLOADER_FLASH_BANK_SIZE + KVSTORE_SIZE)",
+       "update-client.storage-size"               : "(MBED_BOOTLOADER_FLASH_BANK_SIZE - KVSTORE_SIZE)",
+       "update-client.storage-locations"          : 1,
+       "kvstore-size": "2*64*1024",
+       "update-client.storage-page": 1
     
 1. Compile the bootloader using the `bootloader_app.json` configuration you've just edited:
 
-   ```
-   $ mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>
-   ```
+       mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>
 
 <span class="notes">**Note:** `mbed-bootloader` is primarily optimized for `GCC_ARM`, so you may want to compile it with that toolchain.
 Before jumping to the next step, you should compile and flash the bootloader and then connect over the virtual serial port to ensure the bootloader is running correctly. You can ignore errors related to checksum verification or falure to jump to application - these are expected at this stage.</span>
@@ -238,7 +251,7 @@ To confirm that the platform is working correcly, run the following tests:
 
 - Pelion Client tests, including firmware update.
 
-  See the [testing](./TESTS/Readme.md) documentation to validate the configuration on this example.
+  See the [testing](./TESTS/README.md) documentation to validate the configuration on this example.
 
 # Known-issues
 
