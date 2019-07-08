@@ -47,7 +47,7 @@ This repository is in the process of being updated and depends on few enhancemen
     cd mbed-os-pelion-example
     ./patch-mbed-cloud-client.sh
 
-## Compilation
+## Compiling
 
     mbed target K64F
     mbed toolchain GCC_ARM
@@ -56,9 +56,8 @@ This repository is in the process of being updated and depends on few enhancemen
 
 ## Program Flow
 
-1. Bootstrap
-1. Register
-1. Open a serial terminal using putty/minicom (115200 bauds)
+1. Initialize, connect and register to Pelion DM
+1. Interact with user through the serial (115200 bauds)
    - Press enter through putty/minicom to simulate button
    - Press 'i' to print endpoint name
    - Press Ctrl-C to to unregister
@@ -78,13 +77,13 @@ Check the public tutorial for further information:
   
   Solution: Format the the storage by pressing 'r' in the serial terminal.
   
-# Porting process to add new platforms
+# Porting process to add Mbed Enabled board
 
 ## 1. Application configuration
 
 <span class="notes">**Note**: consider allocating the credentials on internal flash to simplify the application setup process. In addition, consider the use of internal flash to store the firmware candidate image for the FW update process as this would remove the need to use external components. If there isn't enough space, you may need to enable external storage (SD Card, SPI, etc).</span>
 
-Mbed OS platforms should have a default configuration for connectivity and storage in Mbed OS (`targets.json`).
+Mbed OS boards should have a default configuration for connectivity and storage in Mbed OS (`targets.json`).
 You can extend or override the default configuration using `mbed_app.json` in this application. Create a new entry under the target name for your device.
 
 ### a. Connectivity
@@ -101,8 +100,8 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Start by getting familiar with the multiple [storage options](https://os.mbed.com/docs/mbed-os/latest/reference/storage.html) and configurations supported in Mbed OS.
 
-  Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions. In this case the configuration for the board stores credentials in internal flash (KVSTORE/TDB_INTERNAL). The flash regions are described as follows:
-  
+  Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions:
+ 
     +--------------------------+
     |                          |
     |                          |
@@ -134,9 +133,11 @@ You can extend or override the default configuration using `mbed_app.json` in th
     |                          |
     +--------------------------+ <-+ 0
 
+  In cases where the MCU has two separate memory banks, it's appropiate to allocate the bootloader and base application in one bank, and KVSTORE storage at the begining of the second bank followed by a firmware candidate storage.
+
   - **Option 1:** Allocating credentials in internal memory
     
-    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is type of storage is selected in `mbed_app.json`. Specify the base address depending on the available memory for the whole system. The size of this section should be aligned with the flash erase sector and allocate a mininum of 50KB aproximately. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform in this application.
+    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is the type of storage selected in `mbed_app.json`. Specify the base address depending on the available memory in the system. The size of this section should be aligned with the flash erase sector. The value should be multiple of 4 with a minimum of 24KB and upwards depending on the use case (for example the usage of certificate chain will increase the need of storage to hold those certificates). An example of this configuration can be seen for the `NUCLEO_F429ZI` platform in this application.
 
         "storage.storage_type"                      : "TDB_INTERNAL" 
         "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
