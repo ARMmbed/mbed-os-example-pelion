@@ -3,7 +3,7 @@
 This is a simplified example with the following features:
 - Mbed OS 5.13 and Pelion Device Management Client 3.3.0 
 - Support for FW Update
-- 200 lines of codes + credential sources
+- 200 lines of code + credential sources
 
 Note this application is considered **alpha** and given early access to Mbed Partners.
 
@@ -57,7 +57,7 @@ This repository is in the process of being updated and depends on few enhancemen
 ## Program Flow
 
 1. Initialize, connect and register to Pelion DM
-1. Interact with user through the serial (115200 bauds)
+1. Interact with the user through the serial port (115200 bauds)
    - Press enter through putty/minicom to simulate button
    - Press 'i' to print endpoint name
    - Press Ctrl-C to to unregister
@@ -67,7 +67,7 @@ This repository is in the process of being updated and depends on few enhancemen
 
 Check the public tutorial for further information:
 
-    https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html
+  [https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html](https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html)
 
 ## Troubleshooting
 
@@ -77,7 +77,23 @@ Check the public tutorial for further information:
   
   Solution: Format the the storage by pressing 'r' in the serial terminal.
   
-# Porting process to add Mbed Enabled board
+# Porting process to add support for an Mbed Enabled board
+
+  There are many steps involved in this process. We generally recomend the following steps:
+  
+  1. Configure the application using `mbed_app.json`
+      - Configure the default connectivity
+      - Configure the KVSTORE area to store credentials (internal or external memory)
+      - Build the application, program the board and observe whether the application can connect to Pelion DM by using a serial terminal.
+  1. Configure the bootloader using `bootloader_app.json`
+      - Configure the KVSTORE area
+      - Configure the FW Candidate Storage
+      - Build bootloader application, program the board and observe whether this is able to boot.
+  1. Enable application with bootloader using `mbed_app.json`
+      - Enable the usage of the bootloader
+      - Ensure the KVSTORE addresses and FW Candidate storage addresses match with the bootloader configuration
+      - Build the application again (this time combined with bootloader) and check whether it can boot and connect to Pelion DM.
+      - Perform a FW Update and check whether the process can be completed succesfully.
 
 ## 1. Application configuration
 
@@ -161,13 +177,13 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Before enabling FW updates, it's recomended that the application is able to initialize the network and connect to Pelion DM.
   
-  Once the connection is successfull, you tan follow the steps below to enable the platform to receive FW updates. Note the configuration for the application in this section should match with the one on the bootloader - see section below.
+  Once the connection is successfull, you can follow the steps below to enable the platform to receive FW updates. Note the configuration for the application in this section should match with the one on the bootloader - see section below.
    
   - Common configuration
   
-    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` options. The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output. Review the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader#configurations) guidelines on how these options should be selected.
+    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` options. The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output.
     
-    Review the [bootloader configuration](2.-Bootloader-configuration) section below.
+    Review the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader#configurations) guidelines on how these options should be selected. Review the [bootloader configuration](2.-Bootloader-configuration) section below for more information.
     
     Copy the compiled bootloader from `mbed-bootloader/BUILDS/<TARGET>/<TOOLCHAIN>-TINY/mbed-bootloader.bin` to `bootloader/mbed-bootloader-<TARGET>.bin`.
 
@@ -238,21 +254,21 @@ Before jumping to the next step, you should compile and flash the bootloader and
 
 ## Validation and testing
 
-To confirm that the platform is working correcly, run the following tests:
+In addition to having an example application succesfully connected to Pelion DM, it's required to ensure that the application is working correcly in multiple situations. This can be achived by running the following tests:
 
-- Mbed OS test
+- Mbed OS tests (as described in our [documentation](https://os.mbed.com/docs/mbed-os/latest/porting/testing.html))
 
   `mbed test`
 
 - Mbed OS integration tests
 
-  See mbed-os/TESTS/integration/README.md (sip-workshop branch)
+  See [mbed-os/TESTS/integration/README.md](https://github.com/ARMmbed/mbed-os/blob/sip-workshop/TESTS/integration/README.md) (sip-workshop branch)
   
   `mbed test -t <toolchain> -m <platform> -n *integration-* -DINTEGRATION_TESTS -v `
 
 - Pelion Client tests, including firmware update.
 
-  See the [testing](./TESTS/README.md) documentation to validate the configuration on this example.
+  See the [testing](./TESTS/README.md) documentation to validate the configuration in this example.
 
 # Known-issues
 
