@@ -4,7 +4,9 @@
         "MBED_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
         "MBED_CLOUD_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
         "MBED_BOOTLOADER_SIZE=(32*1024)",
-        "ARM_UC_USE_PAL_BLOCKDEVICE=1"
+        "ARM_UC_USE_PAL_BLOCKDEVICE=1",
+        "PAL_PLATFORM_DEFINED_CONFIGURATION=\"mbedOS_SST.h\"",
+        "PAL_USER_DEFINED_CONFIGURATION=\"mbedOS_SST.h\""
     ],
     "target_overrides": {
         "*": {

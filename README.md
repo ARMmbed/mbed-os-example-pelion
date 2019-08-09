@@ -11,9 +11,9 @@ Note this application is considered **alpha** and given early access to Mbed Par
 
 This table shows a list of platforms that are supported.
 
-Platform                          |  Connectivity     | Storage for credentials  | Storage for FW candidate | Notes          
-----------------------------------| ------------------| -------------------------| -----------------------  | --------------  
-NXP K64F                          | Ethernet          | Internal Flash           |  Internal Flash          |                
+Platform                          |  Connectivity     | Storage for credentials  | Storage for FW candidate | Notes
+----------------------------------| ------------------| -------------------------| -----------------------  | --------------
+NXP K64F                          | Ethernet          | Internal Flash           |  Internal Flash          |
 NXP K66F                          | Ethernet          | Internal Flash           |  Internal Flash          |
 ST NUCLEO_F429ZI                  | Ethernet          | Internal Flash           |  Internal Flash          |
 ST NUCLEO_F411RE                  | WiFi IDW01M1      | SD card                  |  SD card                 |
@@ -45,7 +45,6 @@ This repository is in the process of being updated and depends on few enhancemen
 
     mbed import mbed-os-pelion-example
     cd mbed-os-pelion-example
-    ./patch-mbed-cloud-client.sh
 
 ## Compiling
 
