@@ -272,3 +272,5 @@ In addition to having an example application succesfully connected to Pelion DM,
 # Known-issues
 
 Please review existing issues on github and report any problem you may see.
+
+
