@@ -7,6 +7,7 @@ This is a simplified example with the following features:
 
 Note this application is considered **alpha** and given early access to Mbed Partners.
 
+
 ## Supported platforms
 
 This table shows a list of platforms that are supported.
