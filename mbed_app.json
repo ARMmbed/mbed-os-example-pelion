@@ -20,7 +20,11 @@
             "events.shared-stacksize"                   : 2048,
             "nsapi.default-wifi-security"               : "WPA_WPA2",
             "nsapi.default-wifi-ssid"                   : "\"SSID\"",
-            "nsapi.default-wifi-password"               : "\"PASSWORD\""
+            "nsapi.default-wifi-password"               : "\"PASSWORD\"",
+            "nsapi.default-cellular-apn"                : "\"APN\"",
+            "nsapi.default-cellular-sim-pin"            : null,
+            "nsapi.default-cellular-username"           : null,
+            "nsapi.default-cellular-password"           : null
         },
         "Freescale": {
             "lwip.mem-size"                             : 12500
@@ -181,6 +185,43 @@
             "update-client.storage-address"             : "(MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_SIZE)",
             "update-client.storage-locations"           : 1,
             "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
+        },
+        "EP_AGORA": {
+            "target.features_add"                       : ["LWIP", "STORAGE", "BOOTLOADER"],
+            "target.features_remove"                    : ["BLE"],
+            "target.extra_labels_remove"                : ["CORDIO", "CORDIO_LL", "NORDIC_CORDIO"],
+            "target.extra_labels_add"                   : ["SOFTDEVICE_NONE"],
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\"", "MBED_BOOTLOADER_ACTIVE_HEADER_REGION_SIZE=1024", "MBED_ROM_START=0x0"],
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-ep_agora-block_device-kvstore-v4.0.2.hex",
+            "target.header_offset"                      : "0xB000",
+            "target.app_offset"                         : "0xB400",
+            "target.components_remove"                  : ["QSPIF"],
+            "target.components_add"                     : ["FLASHIAP"],
+            "target.restrict_size"                      : "0x‭ECC00",
+            "update-client.bootloader-details"          : "0x952C",
+            "update-client.application-details"         : "0xB000",
+            "update-client.storage-address"             : "(2*1024*1024)",
+            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
+            "update-client.firmware-header-version"     : "2",
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+            "storage_filesystem.internal_base_address"  : "((1024*1024) - (32*1024))",
+            "storage_filesystem.rbp_internal_size"      : "(32*1024)",
+            "storage.storage_type"                      : "FILESYSTEM",
+            "storage_filesystem.filesystem"             : "LITTLE",
+            "storage_filesystem.blockdevice"            : "SPIF",
+            "storage_filesystem.external_base_address"  : "(0x0)",
+            "storage_filesystem.external_size"          : "(1024*1024*1)",
+            "platform.default-serial-baud-rate"         : 230400,
+            "platform.stdio-baud-rate"                  : 230400,
+            "drivers.uart-serial-rxbuf-size"            : 1024,
+            "drivers.uart-serial-txbuf-size"            : 1024,
+            "lwip.ipv4-enabled"                         : true,
+            "lwip.ipv6-enabled"                         : true,
+            "lwip.ppp-enabled"                          : true,
+            "lwip.tcp-enabled"                          : true,
+            "lwip.ethernet-enabled"                     : false,
+            "lwip.mem-size"                             : 22000,
+            "nsapi.dns-response-wait-time"              : 30000
         }
     },
     "config": {

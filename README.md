@@ -22,6 +22,7 @@ Board                          |  Connectivity     | Storage for credentials and
 `Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 |
 `ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   |
 `Ublox UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
+`Embedded Planet EP_AGORA`          | Cellular          | SPIF                    | Build-only
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
