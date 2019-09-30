@@ -160,6 +160,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - **Option 2:** Allocating credentials in external memory:
     
+    
     This is possible when the platform has an storage device wired to the MCU (could be on-board or external component). Make sure `FILESYSTEM` is specified as type of storage. The blockdevice and filesystem should be one of the supported in Mbed OS (see [docs](https://os.mbed.com/docs/mbed-os/latest/porting/blockdevice-port.html)).
     
     An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
