@@ -41,7 +41,7 @@ void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
     printf("Endpoint name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
-    printf("Device ID: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
+    printf("Device Id: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
 void button_press(void)
@@ -107,7 +107,7 @@ int main(void)
     }
 
     // Mount default kvstore
-    printf("Initialize KVStore\n");
+    printf("Application ready\n");
     status = kv_init_storage_config();
     if (status != MBED_SUCCESS) {
         printf("kv_init_storage_config() - failed, status %d\n", status);
@@ -126,7 +126,8 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-    printf("Network connected with IP %s\n\n", network->get_ip_address());
+
+    printf("Network initialized, connected with IP %s\n\n", network->get_ip_address());
 
     // Run developer flow
     printf("Start developer flow\n");
