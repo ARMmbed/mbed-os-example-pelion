@@ -17,7 +17,7 @@
             "platform.stdio-flush-at-exit"              : true,
             "rtos.main-thread-stack-size"               : 5120,
             "update-client.storage-locations"           : 1,
-            "mbed-trace.enable"                         : null,
+            "mbed-trace.enable"                         : 1,
             "events.shared-stacksize"                   : 2048,
             "nsapi.default-wifi-security"               : "WPA_WPA2",
             "nsapi.default-wifi-ssid"                   : "\"SSID\"",

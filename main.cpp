@@ -115,7 +115,6 @@ int main(void)
     }
 
     // Connect with NetworkInterface
-    printf("Connect to network\n");
     network = NetworkInterface::get_default_instance();
     if (network == NULL) {
         printf("Failed to get default NetworkInterface\n");
@@ -125,8 +124,9 @@ int main(void)
     if (status != NSAPI_ERROR_OK) {
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
-    }
-    printf("Network connected with IP %s\n\n", network->get_ip_address());
+    }    
+    
+    printf("Network initialized, connected with IP %s\n\n", network->get_ip_address());
 
     // Run developer flow
     printf("Start developer flow\n");
