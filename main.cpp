@@ -107,7 +107,7 @@ int main(void)
     }
 
     // Mount default kvstore
-    printf("Initialize KVStore\n");
+    printf("Application ready\n");
     status = kv_init_storage_config();
     if (status != MBED_SUCCESS) {
         printf("kv_init_storage_config() - failed, status %d\n", status);
