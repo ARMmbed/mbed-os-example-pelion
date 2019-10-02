@@ -69,6 +69,8 @@ void deregister_client(void)
 void deregister(void* /*arguments*/)
 {
     printf("POST deregister executed\n");
+    m2m_deregister_res->send_delayed_post_response();
+
     deregister_client();
 }
 
@@ -175,6 +177,10 @@ int main(void)
 
     // POST resource 5000/0/1 to trigger deregister.
     m2m_deregister_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 5000, 0, 1, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
+
+    // Use delayed response
+    m2m_deregister_res->set_delayed_response(true);
+
     if (m2m_deregister_res->set_execute_function(deregister) != true) {
         printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
