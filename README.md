@@ -1,12 +1,5 @@
 # Pelion Client Mbed OS Example
 
-This is a simplified example with the following features:
-- Mbed OS 5.13 and Pelion Device Management Client 3.3.0 
-- Support for FW Update
-- 200 lines of code + credential sources
-
-Note this application is considered **alpha** and given early access to Mbed Partners.
-
 ## Supported platforms
 
 This table shows a list of platforms that are supported.
