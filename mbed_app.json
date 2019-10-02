@@ -159,7 +159,29 @@
             "update-client.storage-address"             : "(MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_SIZE)",
             "update-client.storage-locations"           : 1,
             "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
-        }
+        },
+        "CY8CPROTO_062_4343W": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
+            "target.network-default-interface-type"     : "WIFI",            
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader_cy8cproto.hex",		
+            "bootloader-size"                           : "(48*1024)",
+            "target.header_offset"                      : "0x0000C000",
+            "target.app_offset"                         : "0x0000C400",
+            "update-client.bootloader-details"          : "0x10009C8C",
+            "update-client.application-details"         : "0x1000C000",
+            "update-client.storage-address"             : "0x10110000",      
+            "update-client.storage-size"                : "0x000F0000",
+            "update-client.storage-locations"           : 1,
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
+            "storage_tdb_internal.internal_base_address": "0x100F0000",
+            "storage_tdb_internal.internal_size"        : "0x00020000",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "target.bootloader_supported"               : true,
+            "target.mbed_rom_start"                     : "0x10000000",
+            "target.mbed_rom_size"                      : "0x00200000",
+            "target.sectors"                            : [[268435456, 512]],
+            "target.extra_labels_remove"                : ["CM0P_SLEEP"]         
+        }         
     },
     "config": {
         "bootloader-size": {
