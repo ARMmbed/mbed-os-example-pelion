@@ -60,6 +60,7 @@ void execute_post(void* /*arguments*/)
     printf("POST executed\n");
 }
 
+
 void deregister_client(void)
 {
     printf("Unregistering and disconnecting from the network.\n");
