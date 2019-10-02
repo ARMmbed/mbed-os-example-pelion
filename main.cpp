@@ -24,6 +24,7 @@
 
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
 
+
 // Pointers to the resources that will be created in main_application().
 static MbedCloudClient *cloud_client;
 static bool cloud_client_running = true;
