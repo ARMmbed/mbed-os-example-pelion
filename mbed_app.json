@@ -8,6 +8,7 @@
         "PAL_PLATFORM_DEFINED_CONFIGURATION=\"mbedOS_SST.h\"",
         "PAL_USER_DEFINED_CONFIGURATION=\"mbedOS_SST.h\""
     ],
+    
     "target_overrides": {
         "*": {
             "target.features_add"                       : ["BOOTLOADER", "STORAGE"],
