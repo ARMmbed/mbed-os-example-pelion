@@ -1,0 +1,9 @@
+<testsuite failures="2" tests="3" errors="0" skipped="0">
+<testcase classname="ExampleAppCloudTest01_Rel1_2.K64F" name="unknown" time="105.391671"/>
+<testcase classname="I0010111F040.process" name="unknown" time="7.6468">
+<failure message="Assert: False != True"></failure>
+</testcase>
+<testcase classname="I0010112E027.process" name="unknown" time="16.085773">
+<failure message="Timeout -- Message ['registration error 160'] not in response in 15s."></failure>
+</testcase>
+</testsuite>
