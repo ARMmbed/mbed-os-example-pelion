@@ -63,7 +63,7 @@ class Testcase(PelionBase):
         # Get the endpoint from the logs
         self.logger.info("Reading device ID from console.")
         dev_id_raw = ""
-        dev_id_raw = list(filter(lambda x: "Device ID" in x, self.duts[0].traces))
+        dev_id_raw = list(filter(lambda x: "Device Id" in x, self.duts[0].traces))
         device_id = dev_id_raw[0].split()[2]
         self.logger.info("Writing Device ID %s to pelion.tc_cfg", device_id)
         # Store the Device ID to pelion.tc_cfg
