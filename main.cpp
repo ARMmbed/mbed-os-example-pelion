@@ -41,7 +41,7 @@ void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
     printf("Endpoint name: %s\n", cloud_client->endpoint_info()->internal_endpoint_name.c_str());
-    printf("Device Id: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
+    printf("Device ID: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
 void button_press(void)
