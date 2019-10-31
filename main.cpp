@@ -37,6 +37,9 @@ static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
 
+EventQueue queue(32 * EVENTS_EVENT_SIZE);
+Thread t;
+
 void print_client_ids(void)
 {
     printf("Account ID: %s\n", cloud_client->endpoint_info()->account_id.c_str());
@@ -44,7 +47,7 @@ void print_client_ids(void)
     printf("Device ID: %s\n\n", cloud_client->endpoint_info()->endpoint_name.c_str());
 }
 
-void button_press(void)
+void value_increment(void)
 {
     m2m_get_res->set_value(m2m_get_res->get_value_int() + 1);
     printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
@@ -191,6 +194,9 @@ int main(void)
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
+    t.start(callback(&queue, &EventQueue::dispatch_forever));
+    queue.call_every(10000, value_increment);
+
     while(cloud_client_running) {
         int in_char = getchar();
         if (in_char == 'i') {
@@ -201,9 +207,6 @@ int main(void)
             printf("Storage erased, rebooting the device.\n\n");
             wait(1);
             NVIC_SystemReset();
-        } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
-            button_press(); // Simulate button press
-            continue;
         }
         deregister_client();
         break;
