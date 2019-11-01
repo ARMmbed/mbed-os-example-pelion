@@ -187,7 +187,13 @@ int main(void)
     }
 
     printf("Register Pelion Device Management Client\n\n");
+
+#ifdef MBED_CLOUD_CLIENT_SUPPORT_UPDATE
     cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
+#else
+    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error);
+#endif // MBED_CLOUD_CLIENT_SUPPORT_UPDATE
+
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
 
