@@ -163,7 +163,7 @@
             "lwip.ethernet-enabled"                     : false,
             "lwip.ppp-enabled"                          : true,
             "lwip.tcp-enabled"                          : true,
-            "cellular.debug-at"                         : true,
+            "cellular.debug-at"                         : false,
             "cellular.radio-access-technology"          : 9,
             "nsapi.default-cellular-sim-pin"            : null,
             "nsapi.default-cellular-plmn"               : null,
