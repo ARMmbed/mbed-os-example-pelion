@@ -1,7 +1,7 @@
 # Pelion Client Mbed OS Example
 
 This is a simplified example with the following features:
-- Mbed OS 5.13.0 and Pelion Device Management Client 3.3.0
+- Mbed OS 5.14.1 and Pelion Device Management Client 4.0.0
 - Support for FW Update
 - 200 lines of code + credential sources
 
@@ -43,15 +43,19 @@ This section is intended for developers to get started, import the example appli
 
 This repository is in the process of being updated and depends on few enhancements being deployed in mbed-cloud-client. In the meantime, follow these steps to import and apply the patches before compiling.
 
+    ```
     mbed import mbed-os-pelion-example
     cd mbed-os-pelion-example
+    ```
 
 ## Compiling
 
+    ```
     mbed target K64F
     mbed toolchain GCC_ARM
     mbed device-management init -d arm.com --model-name example-app --force -q
     mbed compile
+    ```
 
 ## Program Flow
 
@@ -117,6 +121,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Then start designing the system memory map, the location of components (whether they are on internal or external memory), and the corresponding base addresses and sizes. You may want to create a diagram similar to the one below to help you to make design decisions:
 
+```
     +--------------------------+
     |                          |
     |                          |
@@ -147,6 +152,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
     |        Bootloader        |
     |                          |
     +--------------------------+ <-+ 0
+```
 
   In cases where the MCU has two separate memory banks, it's appropiate to allocate the bootloader and base application in one bank, and KVSTORE storage at the begining of the second bank followed by a firmware candidate storage.
 
@@ -154,9 +160,11 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
     **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is the type of storage selected in `mbed_app.json`. Specify the base address depending on the available memory in the system. The size of this section should be aligned with the flash erase sector. The value should be multiple of 4 with a minimum of 24KB and upwards depending on the use case (for example the usage of certificate chain will increase the need of storage to hold those certificates). An example of this configuration can be seen for the `NUCLEO_F429ZI` platform in this application.
 
+        ```
         "storage.storage_type"                      : "TDB_INTERNAL"
         "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
         "storage_tdb_internal.internal_size"        : "(128*1024)",
+        ```
 
   - **Option 2:** Allocating credentials in external memory:
 
@@ -164,6 +172,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
     An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
 
+        ```
         "storage.storage_type"                      : "FILESYSTEM",
         "storage_filesystem.blockdevice"            : "SD",
         "storage_filesystem.filesystem"             : "LITTLE",
@@ -171,6 +180,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
         "storage_filesystem.rbp_internal_size"      : "(8*1024)",
         "storage_filesystem.external_base_address"  : "(0x0)",
         "storage_filesystem.external_size"          : "(1024*1024*64)",
+        ```
 
 ### c. Storage for firmware updates
 
@@ -198,20 +208,24 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
 
+        ```
         "update-client.application-details"         : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
         "update-client.bootloader-details"          : "0x08007300",
         "target.bootloader_img"                     : "bootloader/mbed-bootloader-<target>",
         "target.header_offset"                      : "0x8000",
         "target.app_offset"                         : "0x8400",
+        ```
 
   - **Option 1:** Allocating the firmware update candidate in internal memory
 
     **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash after the KVSTORE area. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the bootloader area. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
 
+        ```
         "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
         "update-client.storage-address"             : "(MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS+MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
         "update-client.storage-size"                : "(1024*1024-MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
         "update-client.storage-page"                : 1,
+        ```
 
   - **Option 2:** Allocating the firmware update candidate in external memory
 
@@ -219,9 +233,11 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
 
+        ```
         "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
         "update-client.storage-address"             : "(1024*1024*64)",
         "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
+        ```
 
 ## 2. Bootloader configuration
 
@@ -231,21 +247,23 @@ The bootloader is required to perform FW Updates. The steps below explain how to
 
 1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform:
 
-       "update-client.firmware-header-version": "2",
-       "mbed-bootloader.use-kvstore-rot": 0,
-       "mbed-bootloader.bootloader-size": "APPLICATION_SIZE",
+       ```
+       "update-client.firmware-header-version"    : "2",
+       "mbed-bootloader.use-kvstore-rot"          : 0,
+       "mbed-bootloader.bootloader-size"          : "APPLICATION_SIZE",
        "update-client.application-details"        : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
        "mbed-bootloader.application-start-address": "(MBED_CONF_UPDATE_CLIENT_APPLICATION_DETAILS + MBED_BOOTLOADER_ACTIVE_HEADER_REGION_SIZE)",
        "mbed-bootloader.max-application-size"     : "(MBED_ROM_START + MBED_BOOTLOADER_FLASH_BANK_SIZE - MBED_CONF_MBED_BOOTLOADER_APPLICATION_START_ADDRESS)",
        "update-client.storage-address"            : "(MBED_ROM_START + MBED_BOOTLOADER_FLASH_BANK_SIZE + KVSTORE_SIZE)",
        "update-client.storage-size"               : "(MBED_BOOTLOADER_FLASH_BANK_SIZE - KVSTORE_SIZE)",
        "update-client.storage-locations"          : 1,
-       "kvstore-size": "2*64*1024",
-       "update-client.storage-page": 1
+       "kvstore-size"                             : "2*64*1024",
+       "update-client.storage-page"               : 1
+       ```
 
 1. Compile the bootloader using the `bootloader_app.json` configuration you've just edited:
 
-       mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>
+    `mbed compile -t <TOOLCHAIN> -m <TARGET> --profile=tiny.json --app-config=.../mbed-os-pelion-example/bootloader/bootloader_app.json>`
 
 <span class="notes">**Note:** `mbed-bootloader` is primarily optimized for `GCC_ARM`, so you may want to compile it with that toolchain.
 Before jumping to the next step, you should compile and flash the bootloader and then connect over the virtual serial port to ensure the bootloader is running correctly. You can ignore errors related to checksum verification or falure to jump to application - these are expected at this stage.</span>
@@ -263,7 +281,7 @@ In addition to having an example application succesfully connected to Pelion DM,
 
   See [mbed-os/TESTS/integration/README.md](https://github.com/ARMmbed/mbed-os/blob/sip-workshop/TESTS/integration/README.md) (sip-workshop branch)
 
-  `mbed test -t <toolchain> -m <platform> -n *integration-* -DINTEGRATION_TESTS -v `
+  `mbed test -t <toolchain> -m <platform> -n *integration-* -DINTEGRATION_TESTS -v`
 
 - Pelion Client tests, including firmware update.
 
