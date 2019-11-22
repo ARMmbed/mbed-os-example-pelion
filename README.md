@@ -11,13 +11,14 @@ There is an example of the client for multiple operating systems in [mbed-cloud-
 
 This table shows a list of platforms that are supported.
 
-Platform                          |  Connectivity     | Storage for credentials  | Storage for FW candidate | Notes
-----------------------------------| ------------------| -------------------------| -----------------------  | --------------
-NXP K64F                          | Ethernet          | Internal Flash           |  Internal Flash          |
-NXP K66F                          | Ethernet          | Internal Flash           |  Internal Flash          |
-ST NUCLEO_F429ZI                  | Ethernet          | Internal Flash           |  Internal Flash          |
-ST NUCLEO_F411RE                  | Wi-Fi IDW01M1     | SD card                  |  SD card                 |
-Ublox UBLOX_EVK_ODIN_W2           | Wi-Fi             | SD card                  |  SD card                 |
+Platform                          |  Connectivity     | Storage for credentials and FW candidate | Notes
+----------------------------------| ------------------| ------------------------| --------------
+NXP K64F                          | Ethernet          | Internal Flash          |
+NXP K66F                          | Ethernet          | Internal Flash          |
+ST NUCLEO_F429ZI                  | Ethernet          | Internal Flash          |
+ST NUCLEO_F411RE                  | Wi-Fi ESP8266     | SD card                 |
+Ublox UBLOX_EVK_ODIN_W2           | Wi-Fi             | SD card                 |
+ST DISCO_L475VG_IOT01A            | Wi-Fi             | QSPIF                   |
 
 <span class="notes">**(*) Note**: the platforms require further testing</span>
 
