@@ -20,7 +20,7 @@ ST NUCLEO_F411RE                  | Wi-Fi ESP8266     | SD card                 
 Ublox UBLOX_EVK_ODIN_W2           | Wi-Fi             | SD card                 |
 ST DISCO_L475VG_IOT01A            | Wi-Fi             | QSPIF                   |
 
-<span class="notes">**(*) Note**: the platforms require further testing</span>
+Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
 # Developer guide
 
