@@ -46,7 +46,8 @@ class Testcase(PelionBase):
 
         # Verify client is deregistered
         self.logger.info("POST done")
-
+        # Post response may comes fast. Wait finish deregister operation
+        self.delay(5)
         self.verify_registration("deregistered")
 
     def teardown(self):
