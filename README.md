@@ -1,24 +1,26 @@
-# Pelion Client Mbed OS Example
+# Pelion Device Management Client example for Mbed OS
 
-This is a simplified example for Mbed OS with the following features:
-- Mbed OS 5.14.1 and Pelion Device Management Client 4.0.0
-- Support for FW Update
-- 200 lines of code + credential sources
+This is an basic Device Management client example for Mbed OS with the following features:
+- Support for latest Mbed OS and Device Management Client releases.
+- Support for Developer mode provisioning.
+- Support for FW Update.
 
-There is an example of the client for multiple operating systems in [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example) repository. The underlying client library is the same for both. This Mbed OS only example is simpler as it only supports one OS, but if you want to do development in Linux and Mbed OS at the same time - you should use the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example).
+There is a more advanced example of the client with support for multiple operating systems in [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example) repository. The underlying client library is the same for both. This Mbed OS only example is simpler as it only supports one OS with a limited set of demonstrated features. If you want to do development in Linux and Mbed OS at the same time - you should use the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example).
 
-## Supported platforms
+<span class="notes">**Note:** If you want to use production provisioning modes, or use more advanced client features, those are demonstrated via [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example).</span>
 
-This table shows a list of platforms that are supported.
+## Supported boards
 
-Platform                          |  Connectivity     | Storage for credentials and FW candidate | Notes
+This table shows a list of boards that are supported.
+
+Board                          |  Connectivity     | Storage for credentials and FW candidate | Notes
 ----------------------------------| ------------------| ------------------------| --------------
-NXP K64F                          | Ethernet          | Internal Flash          |
-NXP K66F                          | Ethernet          | Internal Flash          |
-ST NUCLEO_F429ZI                  | Ethernet          | Internal Flash          |
-ST NUCLEO_F411RE                  | Wi-Fi ESP8266     | SD card                 |
-Ublox UBLOX_EVK_ODIN_W2           | Wi-Fi             | SD card                 |
-ST DISCO_L475VG_IOT01A            | Wi-Fi             | QSPIF                   |
+`NXP K64F`                          | Ethernet          | Internal Flash          |
+`NXP K66F`                          | Ethernet          | Internal Flash          |
+`ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          |
+`ST NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 |
+`Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 |
+`ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   |
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
@@ -45,8 +47,8 @@ This section is intended for developers to get started, import the example appli
 This repository is in the process of being updated and depends on few enhancements being deployed in mbed-cloud-client. In the meantime, follow these steps to import and apply the patches before compiling.
 
     ```
-    mbed import mbed-os-pelion-example
-    cd mbed-os-pelion-example
+    mbed import mbed-os-example-pelion
+    cd mbed-os-example-pelion
     ```
 
 ## Compiling
@@ -155,7 +157,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - **Option 1:** Allocating credentials in internal memory
 
-    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is the type of storage selected in `mbed_app.json`. Specify the base address depending on the available memory in the system. The size of this section should be aligned with the flash erase sector. The value should be multiple of 4 with a minimum of 24KB and upwards depending on the use case (for example the usage of certificate chain will increase the need of storage to hold those certificates). An example of this configuration can be seen for the `NUCLEO_F429ZI` platform in this application.
+    **This is the preferred option whenever possible**. Make sure `TDB_INTERNAL` is the type of storage selected in `mbed_app.json`. Specify the base address depending on the available memory in the system. The size of this section should be aligned with the flash erase sector. The value should be multiple of 4 with a minimum of 24KB and upwards depending on the use case (for example the usage of certificate chain will increase the need of storage to hold those certificates). An example of this configuration can be seen for the `NUCLEO_F429ZI` board in this application.
 
         "storage.storage_type"                      : "TDB_INTERNAL"
         "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
@@ -163,9 +165,9 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - **Option 2:** Allocating credentials in external memory:
 
-    This is possible when the platform has an storage device wired to the MCU (could be on-board or external component). Make sure `FILESYSTEM` is specified as type of storage. The blockdevice and filesystem should be one of the supported in Mbed OS (see [docs](https://os.mbed.com/docs/mbed-os/latest/porting/blockdevice-port.html)).
+    This is possible when the board has an storage device wired to the MCU (could be on-board or external component). Make sure `FILESYSTEM` is specified as type of storage. The blockdevice and filesystem should be one of the supported in Mbed OS (see [docs](https://os.mbed.com/docs/mbed-os/latest/porting/blockdevice-port.html)).
 
-    An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
+    An example of this configuration can be seen for the `K64F` board in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
 
         "storage.storage_type"                      : "FILESYSTEM",
         "storage_filesystem.blockdevice"            : "SD",
@@ -179,7 +181,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   Before enabling FW updates, it's recomended that the application is able to initialize the network and connect to Pelion DM.
 
-  Once the connection is successfull, you can follow the steps below to enable the platform to receive FW updates. Note the configuration for the application in this section should match with the one on  the bootloader - see section below.
+  Once the connection is successfull, you can follow the steps below to enable the board to receive FW updates. Note the configuration for the application in this section should match with the one on  the bootloader - see section below.
 
   - Common configuration
 
@@ -199,7 +201,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - `target.header_offset` is also relative offset to the `flash-start-address` you specified in the `bootloader_app.json`, and is the hex value of the offset specified by `update-client.application-details`. For example, `(MBED_CONF_APP_FLASH_START_ADDRESS+64*1024)` dec equals `0x10000` hex.</span>
 
-  An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+  An example of this configuration can be seen for the `NUCLEO_F429ZI` board.
 
         "update-client.application-details"         : "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
         "update-client.bootloader-details"          : "0x08007300",
@@ -209,7 +211,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - **Option 1:** Allocating the firmware update candidate in internal memory
 
-    **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash after the KVSTORE area. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the bootloader area. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform.
+    **This is the preferred option whenever possible**. Make sure `ARM_UCP_FLASHIAP` is selected in `update-storage` in `mbed_app.json`. This area should be located at the end of the flash after the KVSTORE area. Specify the `storage-address`, `storage-size` and `storage-page` as required. The `application-details` option should point at the end of the bootloader area. An example of this configuration can be seen for the `NUCLEO_F429ZI` board.
 
         "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
         "update-client.storage-address"             : "(MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_BASE_ADDRESS+MBED_CONF_STORAGE_TDB_INTERNAL_INTERNAL_SIZE)",
@@ -220,7 +222,7 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   When using an external device to the MCU to store the firmware candidate, make sure `ARM_UCP_FLASHIAP_BLOCKDEVICE` is specified as type of `update-storage`. Specify the `storage-address`, `storage-size` and `storage-page` as required.
 
-  An example of this configuration can be seen for the `K64F` platform in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
+  An example of this configuration can be seen for the `K64F` board in the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example/blob/master/mbed_app.json#L32)
 
         "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
         "update-client.storage-address"             : "(1024*1024*64)",
@@ -232,7 +234,7 @@ The bootloader is required to perform FW Updates. The steps below explain how to
 
 1. Import as a new application the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader/) repository.
 
-1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry. An example of this configuration can be seen for the `NUCLEO_F429ZI` platform:
+1. Edit the bootloader application configuration in this example (`bootloader/bootloader_app.json`) and add a new target entry. An example of this configuration can be seen for the `NUCLEO_F429ZI` board:
 
 
        "update-client.firmware-header-version"    : "2",
@@ -254,23 +256,40 @@ The bootloader is required to perform FW Updates. The steps below explain how to
 <span class="notes">**Note:** `mbed-bootloader` is primarily optimized for `GCC_ARM`, so you may want to compile it with that toolchain.
 Before jumping to the next step, you should compile and flash the bootloader and then connect over the virtual serial port to ensure the bootloader is running correctly. You can ignore errors related to checksum verification or failure to jump to application - these are expected at this stage.</span>
 
-## Validation and testing
+## Validation and testing for the board configuration
 
-In addition to having an example application succesfully connected to Pelion DM, it's required to ensure that the application is working correcly in multiple situations. This can be achived by running the following tests:
+The board needs to pass the underlying Mbed OS tests and be supported by official Mbed OS release.
 
 - Mbed OS tests (as described in our [documentation](https://os.mbed.com/docs/mbed-os/latest/porting/testing.html))
 
-  `mbed test`
+  `cd mbed-os`
+  `mbed test -m <target> -t <toolchain>`
 
 - Mbed OS integration tests
 
   See [mbed-os/TESTS/integration/README.md](https://github.com/ARMmbed/mbed-os/blob/sip-workshop/TESTS/integration/README.md) (sip-workshop branch)
 
-  `mbed test -t <toolchain> -m <platform> -n *integration-* -DINTEGRATION_TESTS -v`
+  `cd mbed-os`
+  `mbed test -t <toolchain> -m <board> -n *integration-* -DINTEGRATION_TESTS -v`
 
-- Pelion Client tests, including firmware update.
+## Validation and testing for the client configuration
 
-  See the [testing](./TESTS/README.md) documentation to validate the configuration in this example.
+Basic pelion features are required to work:
+- Connects to Pelion in developer mode.
+- Firmware can be updated.
+- Responsive to REST API commands.
+
+This should be verified by executing the Pelion E2E python test library tests.
+
+- Install the prerequisites listed in the README of the [pelion-e2e-python-test-library](https://github.com/ARMmbed/pelion-e2e-python-test-library).
+- Configure your API-key as instructed in the same README.
+- Basic tests can be then executed as:
+
+    `pytest TESTS/pelion-e2e-python-test-library/tests/dev-client-tests.py`
+
+    After the first test starts running, press the reset-button on your board to start bootstrap/registration.
+
+<span class="notes">**Note:** Future version will bring in also firmware update test as part of the minimum test set.</span>.
 
 # Known-issues
 
