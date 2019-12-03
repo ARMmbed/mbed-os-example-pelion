@@ -64,9 +64,9 @@ This repository is in the process of being updated and depends on few enhancemen
 1. Initialize, connect and register to Pelion DM
 1. Interact with the user through the serial port (115200 bauds)
    - Press enter through putty/minicom to simulate button
-   - Press 'i' to print endpoint name
+   - Press `i` to print endpoint name
    - Press Ctrl-C to to unregister
-   - Press 'r' to reset storage and reboot (warning: it generates a new device ID!)
+   - Press `r` to reset storage and reboot (warning: it generates a new device ID!)
 
 ## Further information and requirements
 
@@ -263,15 +263,19 @@ The board needs to pass the underlying Mbed OS tests and be supported by officia
 
 - Mbed OS tests (as described in our [documentation](https://os.mbed.com/docs/mbed-os/latest/porting/testing.html))
 
-  `cd mbed-os`
-  `mbed test -m <target> -t <toolchain>`
+```
+  cd mbed-os
+  mbed test -m <target> -t <toolchain>
+```
 
 - Mbed OS integration tests
 
   See [mbed-os/TESTS/integration/README.md](https://github.com/ARMmbed/mbed-os/blob/sip-workshop/TESTS/integration/README.md) (sip-workshop branch)
 
-  `cd mbed-os`
-  `mbed test -t <toolchain> -m <board> -n *integration-* -DINTEGRATION_TESTS -v`
+```
+  cd mbed-os
+  mbed test -t <toolchain> -m <board> -n *integration-* -DINTEGRATION_TESTS -v
+```
 
 ## Validation and testing for the client configuration
 
