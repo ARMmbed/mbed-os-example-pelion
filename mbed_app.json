@@ -320,6 +320,28 @@
             "esp8266.cts"                               : "D12",
             "esp8266.rts"                               : "PB_1",
             "esp8266.rst"                               : "D8"
+        },
+        "ARCH_MAX": {
+            "target.extra_labels_add"                   : ["PSA"],
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
+            "target.network-default-interface-type"     : "ETHERNET",
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-arch_max-block_device-kvstore-v4.0.3.bin",
+            "target.header_offset"                      : "0x10000",
+            "target.app_offset"                         : "0x10400",
+            "update-client.bootloader-details"          : "0x08006FB8",
+            "update-client.application-details"         : "(0x08000000+64*1024)",
+            "update-client.storage-address"             : "(1024*1024*64)",
+            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+            "storage_filesystem.internal_base_address"  : "(0x08000000+32*1024)",
+            "storage_filesystem.rbp_internal_size"      : "(32*1024)",
+            "storage_filesystem.external_base_address"  : "(0x0)",
+            "storage_filesystem.external_size"          : "(1024*1024*64)",
+            "storage.storage_type"                      : "FILESYSTEM",
+            "storage_filesystem.filesystem"             : "LITTLE",
+            "storage_filesystem.blockdevice"            : "SD",
+            "target.lse_available"                      : 0,
+            "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"]
         }
     },
     "config": {
