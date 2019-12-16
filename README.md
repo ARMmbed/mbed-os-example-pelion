@@ -189,7 +189,16 @@ You can extend or override the default configuration using `mbed_app.json` in th
 
   - Common configuration
 
-    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` options. The value of `bootloader-details` can be obtained by running the binary on the target and observing the serial output.
+    Regardless of where the firmware candidate is located (internal or external), there is a need to have a bootloader in place. The binary of the booloader can be specified with the `bootloader_img` option. The address and size of the bootloader determines the `application-details` and `bootloader-details` options. The value of `bootloader-details` can be obtained by checking for the symbol from the map file of the binary. Example python code for obtaining the location:
+    ```python
+    with open("BUILD/UBLOX_EVK_ODIN_W2/GCC_ARM/mbed-bootloader.map", 'r') as fd:
+        s = fd.read()
+
+    regex = r"\.rodata\..*{}\s+(0x[0-9a-fA-F]+)".format("bootloader")
+    match = re.search(regex, s, re.MULTILINE)
+    offset = int(match.groups()[0], 16)
+    print hex(offset)
+    ```
 
     Review the [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader#configurations) guidelines on how these options should be selected. Review the [bootloader configuration](2.-Bootloader-configuration) section below for more information.
 
