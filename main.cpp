@@ -36,6 +36,7 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
+static M2MResource* m2m_tri_res;
 static M2MResource* m2m_saw_res;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
@@ -53,6 +54,7 @@ void value_increment(void)
 {
     value_increment_mutex.lock();
     int param = m2m_get_res->get_value_int();
+    m2m_tri_res->set_value(10 - abs(param % 20 - 10) - 5);
     m2m_saw_res->set_value(param % 11 - 5);
     m2m_get_res->set_value(param + 1);
     printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
@@ -161,6 +163,7 @@ int main(void)
 
     // GET resource 3200/0/5501
     m2m_get_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3200, 0, 5501, M2MResourceInstance::INTEGER, M2MBase::GET_ALLOWED);
+    m2m_get_res->set_resource_type("Counter");
     if (m2m_get_res->set_value(0) != true) {
         printf("m2m_get_res->set_value() failed\n");
         return -1;
@@ -168,6 +171,7 @@ int main(void)
 
     // PUT resource 3201/0/5853
     m2m_put_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3201, 0, 5853, M2MResourceInstance::INTEGER, M2MBase::GET_PUT_ALLOWED);
+    m2m_put_res->set_resource_type("PUT Resource");
     if (m2m_put_res->set_value(0) != true) {
         printf("m2m_put_res->set_value() failed\n");
         return -1;
@@ -179,18 +183,30 @@ int main(void)
 
     // POST resource 3201/0/5850
     m2m_post_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3201, 0, 5850, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
+    m2m_post_res->set_resource_type("POST Resource");
     if (m2m_post_res->set_execute_function(execute_post) != true) {
         printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
     }
 
+    // GET resource 3202/0/5600
     m2m_saw_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3202, 0, 5600, M2MResourceInstance::FLOAT,  M2MBase::GET_ALLOWED);
     m2m_saw_res->set_max_age(100);
-    m2m_saw_res->set_interface_description("Saw Wave");
+    m2m_saw_res->set_resource_type("Saw Wave");
     if (m2m_saw_res->set_value(0) != true) {
         printf("m2m_saw_res->set_value() failed\n");
         return -1;
     }
+
+    // GET resource 3202/1/5600
+    m2m_tri_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3202, 1, 5600, M2MResourceInstance::FLOAT,  M2MBase::GET_ALLOWED);
+    m2m_tri_res->set_max_age(100);
+    m2m_tri_res->set_resource_type("Triangle Wave");
+    if (m2m_tri_res->set_value(0) != true) {
+        printf("m2m_tri_res->set_value() failed\n");
+        return -1;
+    }
+
 
     // POST resource 5000/0/1 to trigger deregister.
     m2m_deregister_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 5000, 0, 1, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
