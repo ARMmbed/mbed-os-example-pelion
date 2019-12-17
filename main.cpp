@@ -36,6 +36,7 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
+static M2MResource* m2m_saw_res;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -51,7 +52,9 @@ void print_client_ids(void)
 void value_increment(void)
 {
     value_increment_mutex.lock();
-    m2m_get_res->set_value(m2m_get_res->get_value_int() + 1);
+    int param = m2m_get_res->get_value_int();
+    m2m_saw_res->set_value(param % 11 - 5);
+    m2m_get_res->set_value(param + 1);
     printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
     value_increment_mutex.unlock();
 }
@@ -181,6 +184,14 @@ int main(void)
         return -1;
     }
 
+    m2m_saw_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3202, 0, 5600, M2MResourceInstance::FLOAT,  M2MBase::GET_ALLOWED);
+    m2m_saw_res->set_max_age(100);
+    m2m_saw_res->set_interface_description("Saw Wave");
+    if (m2m_saw_res->set_value(0) != true) {
+        printf("m2m_saw_res->set_value() failed\n");
+        return -1;
+    }
+
     // POST resource 5000/0/1 to trigger deregister.
     m2m_deregister_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 5000, 0, 1, M2MResourceInstance::INTEGER, M2MBase::POST_ALLOWED);
 
@@ -214,7 +225,7 @@ int main(void)
         } else if (in_char == 'r') {
             (void) fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
             printf("Storage erased, rebooting the device.\n\n");
-            wait(1);
+            thread_sleep_for(1000);
             NVIC_SystemReset();
         } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
             value_increment(); // Simulate button press
