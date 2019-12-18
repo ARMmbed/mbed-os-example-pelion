@@ -41,12 +41,12 @@ static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
 static M2MResource* m2m_tri_res;
 static M2MResource* m2m_saw_res;
+static M2MResource* res_temperature;
+static M2MResource* res_humidity;
 
 // temp resources
 static DevI2C devI2c(PB_11,PB_10);
 static HTS221Sensor sen_hum_temp(&devI2c);
-
-M2MResource *res_temperature;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -74,13 +74,15 @@ void sensors_init() {
  * This function is called periodically.
  */
 void sensors_update() {
-    float temp1_value = 0.0;
+    float temp1_value, humid_value = 0.0;
 
     sen_hum_temp.get_temperature(&temp1_value);
+    sen_hum_temp.get_humidity(&humid_value);
 
-    printf("HTS221 temp:  %7.3f C %%         \n", temp1_value);
+    printf("HTS221 temp:  %7.3f C,  humidity: %7.2f %%         \n", temp1_value, humid_value);
 
     res_temperature->set_value_float(temp1_value);
+    res_humidity->set_value_float(humid_value);
 }
 
 void print_client_ids(void)
@@ -97,7 +99,6 @@ void value_increment(void)
     m2m_tri_res->set_value(10 - abs(param % 20 - 10) - 5);
     m2m_saw_res->set_value(param % 11 - 5);
     m2m_get_res->set_value(param + 1);
-    printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
     sensors_update();
     value_increment_mutex.unlock();
 }
@@ -212,6 +213,14 @@ int main(void)
     res_temperature->set_resource_type("Temperature HTS221 (C)");
     if (res_temperature->set_value(0) != true) {
         printf("res_temperature->set_value() failed\n");
+        return -1;
+    }
+
+    // Humidity 3303/0/5700
+    res_humidity = M2MInterfaceFactory::create_resource(m2m_obj_list, 3304, 0, 5700, M2MResourceInstance::FLOAT, M2MBase::GET_ALLOWED);
+    res_humidity->set_resource_type("Humidity");
+    if (res_humidity->set_value(0) != true) {
+        printf("res_humidity->set_value() failed\n");
         return -1;
     }
 
