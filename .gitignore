@@ -36,3 +36,11 @@
 # App files
 update_default_resources.c
 mbed_cloud_dev_credentials.c
+BUILD
+.mbed
+update_key.key
+update_certificate.pem
+mbed-cloud-client
+mbed-os
+drivers/COMPONENT_WIFI_ISM43362
+TESTS/pelion-e2e-python-test-library
