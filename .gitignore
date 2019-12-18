@@ -44,3 +44,5 @@ mbed-cloud-client
 mbed-os
 drivers/COMPONENT_WIFI_ISM43362
 TESTS/pelion-e2e-python-test-library
+ST_INTERFACES
+X_NUCLEO_COMMON

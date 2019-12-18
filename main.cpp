@@ -24,6 +24,9 @@
 
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
 
+// Sensors related includes and initialization
+#include "HTS221Sensor.h"
+
 // Pointers to the resources that will be created in main_application().
 static MbedCloudClient *cloud_client;
 static bool cloud_client_running = true;
@@ -39,9 +42,46 @@ static M2MResource* m2m_deregister_res;
 static M2MResource* m2m_tri_res;
 static M2MResource* m2m_saw_res;
 
+// temp resources
+static DevI2C devI2c(PB_11,PB_10);
+static HTS221Sensor sen_hum_temp(&devI2c);
+
+M2MResource *res_temperature;
+
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
 Mutex value_increment_mutex;
+
+/**
+ * Initialize sensors
+ */
+void sensors_init() {
+    uint8_t id1;
+
+    // Initialize sensors
+    sen_hum_temp.init(NULL);
+
+    /// Call sensors enable routines
+    sen_hum_temp.enable();
+
+    sen_hum_temp.read_id(&id1);
+
+    printf("HTS221  humidity & temperature    = 0x%X\n", id1);
+}
+
+/**
+ * Update sensors and report their values.
+ * This function is called periodically.
+ */
+void sensors_update() {
+    float temp1_value = 0.0;
+
+    sen_hum_temp.get_temperature(&temp1_value);
+
+    printf("HTS221 temp:  %7.3f C %%         \n", temp1_value);
+
+    res_temperature->set_value_float(temp1_value);
+}
 
 void print_client_ids(void)
 {
@@ -58,6 +98,7 @@ void value_increment(void)
     m2m_saw_res->set_value(param % 11 - 5);
     m2m_get_res->set_value(param + 1);
     printf("Counter %" PRIu64 "\n", m2m_get_res->get_value_int());
+    sensors_update();
     value_increment_mutex.unlock();
 }
 
@@ -127,6 +168,9 @@ int main(void)
         return -1;
     }
 
+    // initalise sensors
+    sensors_init();
+
     // Connect with NetworkInterface
     printf("Connect to network\n");
     network = NetworkInterface::get_default_instance();
@@ -160,6 +204,16 @@ int main(void)
 
     printf("Create resources\n");
     M2MObjectList m2m_obj_list;
+
+    // Sensor resources
+
+    // Temperature 3303/0/5700
+    res_temperature = M2MInterfaceFactory::create_resource(m2m_obj_list, 3303, 0, 5700, M2MResourceInstance::FLOAT, M2MBase::GET_ALLOWED);
+    res_temperature->set_resource_type("Temperature HTS221 (C)");
+    if (res_temperature->set_value(0) != true) {
+        printf("res_temperature->set_value() failed\n");
+        return -1;
+    }
 
     // GET resource 3200/0/5501
     m2m_get_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3200, 0, 5501, M2MResourceInstance::INTEGER, M2MBase::GET_ALLOWED);
