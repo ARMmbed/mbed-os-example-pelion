@@ -294,8 +294,6 @@ This should be verified by executing the Pelion E2E python test library tests.
 
     `pytest TESTS/pelion-e2e-python-test-library/tests/dev-client-tests.py`
 
-    After the first test starts running, press the reset-button on your board to start bootstrap/registration.
-
 <span class="notes">**Note:** Future version will bring in also firmware update test as part of the minimum test set.</span>.
 
 # Known-issues
