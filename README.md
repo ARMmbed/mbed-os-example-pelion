@@ -1,5 +1,6 @@
 # Pelion Device Management Client example for Mbed OS
 
+
 This is an basic Device Management client example for Mbed OS with the following features:
 - Support for latest Mbed OS and Device Management Client releases.
 - Support for Developer mode provisioning.
