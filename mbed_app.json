@@ -219,7 +219,7 @@
             "target.app_offset"                         : "0xB400",
             "target.components_remove"                  : ["QSPIF"],
             "target.components_add"                     : ["FLASHIAP"],
-            "target.restrict_size"                      : "0x‭ECC00",
+            "target.restrict_size"                      : "0xECC00",
             "update-client.bootloader-details"          : "0x952C",
             "update-client.application-details"         : "0xB000",
             "update-client.storage-address"             : "(2*1024*1024)",
