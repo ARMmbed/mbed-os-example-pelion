@@ -244,6 +244,28 @@
             "lwip.ethernet-enabled"                     : false,
             "lwip.mem-size"                             : 22000,
             "nsapi.dns-response-wait-time"              : 30000
+        },
+        "CY8CPROTO_062_4343W": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
+            "target.network-default-interface-type"     : "WIFI",           
+            "target.extra_labels_remove"                : ["CM0P_SLEEP"],	            
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-cy8cproto-062-4343w-internal-flash-kvstore-v4.0.1.hex",
+            "bootloader-size"                           : "(48*1024)",
+            "target.header_offset"                      : "0x0000C000",
+            "target.app_offset"                         : "0x0000C400",
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0x100F0000",
+            "storage_tdb_internal.internal_size"        : "0x00020000",
+            "update-client.bootloader-details"          : "0x10009C8C",
+            "update-client.application-details"         : "0x1000C000",
+            "update-client.storage-address"             : "0x10110000",      
+            "update-client.storage-locations"           : 1,
+            "update-client.storage-size"                : "0x000F0000",
+            "target.bootloader_supported"               : true,
+            "target.mbed_rom_start"                     : "0x10000000",
+            "target.mbed_rom_size"                      : "0x00200000",
+            "target.sectors"                            : [[268435456, 512]]       
         }
     },
     "config": {
