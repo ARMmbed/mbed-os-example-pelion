@@ -56,7 +56,12 @@ void value_increment(void)
     value_increment_mutex.unlock();
 }
 
-void put_update(const char* /*object_name*/)
+void get_res_update(const char* /*object_name*/)
+{
+    printf("Counter resource set to %d\n", (int)m2m_get_res->get_value_int());
+}
+
+void put_res_update(const char* /*object_name*/)
 {
     printf("PUT update %d\n", (int)m2m_put_res->get_value_int());
 }
@@ -157,9 +162,14 @@ int main(void)
     M2MObjectList m2m_obj_list;
 
     // GET resource 3200/0/5501
-    m2m_get_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3200, 0, 5501, M2MResourceInstance::INTEGER, M2MBase::GET_ALLOWED);
+    // PUT also allowed for resetting the resource
+    m2m_get_res = M2MInterfaceFactory::create_resource(m2m_obj_list, 3200, 0, 5501, M2MResourceInstance::INTEGER, M2MBase::GET_PUT_ALLOWED);
     if (m2m_get_res->set_value(0) != true) {
         printf("m2m_get_res->set_value() failed\n");
+        return -1;
+    }
+    if (m2m_get_res->set_value_updated_function(get_res_update) != true) {
+        printf("m2m_get_res->set_value_updated_function() failed\n");
         return -1;
     }
 
@@ -169,7 +179,7 @@ int main(void)
         printf("m2m_put_res->set_value() failed\n");
         return -1;
     }
-    if (m2m_put_res->set_value_updated_function(put_update) != true) {
+    if (m2m_put_res->set_value_updated_function(put_res_update) != true) {
         printf("m2m_put_res->set_value_updated_function() failed\n");
         return -1;
     }
