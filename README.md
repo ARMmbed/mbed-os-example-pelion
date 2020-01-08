@@ -25,6 +25,7 @@ Board                          |  Connectivity     | Storage for credentials and
 `Ublox UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
 `Embedded Planet EP_AGORA`          | Cellular          | SPIF                    | Build-only
 `ST NUCLEO_H743ZI2`                 | Ethernet          | Internal Flash          | Build-only
+`ST NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash          | Build-only
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 

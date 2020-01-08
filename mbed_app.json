@@ -263,6 +263,29 @@
             "update-client.storage-address"             : "(MBED_ROM_START + ((8+2)*128*1024))",
             "update-client.storage-locations"           : 1,
             "update-client.storage-size"                : "(6*128*1024)"
+        },
+        "NUCLEO_L4R5ZI": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\"", "MBED_APP_FLASH_BANK_SIZE=MBED_ROM_SIZE/2", "KVSTORE_SIZE=(32*1024)"],
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-nucleo_l4r5zi-internal_flash_no_rot-ca089bb.bin",
+            "target.header_offset"                      : "0x08000",
+            "target.app_offset"                         : "0x08400",
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
+            "update-client.bootloader-details"          : "0x08007cac",
+            "update-client.application-details"         : "(32*1024)",
+            "update-client.storage-address"             : "(MBED_ROM_START + MBED_APP_FLASH_BANK_SIZE + KVSTORE_SIZE)",
+            "update-client.storage-size"                : "(MBED_APP_FLASH_BANK_SIZE - KVSTORE_SIZE)",
+            "update-client.storage-locations"           : 1,
+            "update-client.storage-page"                : 1,
+            "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
+            "storage_tdb_internal.internal_size"        : "KVSTORE_SIZE",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "target.network-default-interface-type"     : "WIFI",
+            "esp8266.provide-default"                   : true,
+            "esp8266.tx"                                : "D1",
+            "esp8266.rx"                                : "D0",
+            "esp8266.cts"                               : "D12",
+            "esp8266.rts"                               : "PB_1",
+            "esp8266.rst"                               : "D8"
         }
     },
     "config": {
