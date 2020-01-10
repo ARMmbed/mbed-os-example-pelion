@@ -229,7 +229,7 @@ int main(void)
         } else if (in_char == 'r') {
             (void) fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
             printf("Storage erased, rebooting the device.\n\n");
-            wait(1);
+            ThisThread::sleep_for(1*1000);
             NVIC_SystemReset();
         } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
             value_increment(); // Simulate button press
