@@ -36,6 +36,7 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
+static SocketAddress sa;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -139,8 +140,12 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-
-    printf("Network initialized, connected with IP %s\n\n", network->get_ip_address());
+    status = network->get_ip_address(&sa);
+    if (status!=0) {
+        printf("get_ip_address failed with %d\n", status);
+        return -2;
+    }
+    printf("Network initialized, connected with IP %s\n\n", sa.get_ip_address());
 
     // Run developer flow
     printf("Start developer flow\n");
