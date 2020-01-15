@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright 2016-2019 ARM Ltd.
+// Copyright 2016-2020 ARM Ltd.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -36,6 +36,7 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
+static SocketAddress sa;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -139,8 +140,12 @@ int main(void)
         printf("NetworkInterface failed to connect with %d\n", status);
         return -1;
     }
-
-    printf("Network initialized, connected with IP %s\n\n", network->get_ip_address());
+    status = network->get_ip_address(&sa);
+    if (status!=0) {
+        printf("get_ip_address failed with %d\n", status);
+        return -2;
+    }
+    printf("Network initialized, connected with IP %s\n\n", sa.get_ip_address());
 
     // Run developer flow
     printf("Start developer flow\n");
@@ -224,7 +229,7 @@ int main(void)
         } else if (in_char == 'r') {
             (void) fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
             printf("Storage erased, rebooting the device.\n\n");
-            wait(1);
+            ThisThread::sleep_for(1*1000);
             NVIC_SystemReset();
         } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
             value_increment(); // Simulate button press
