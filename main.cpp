@@ -21,6 +21,7 @@
 #include "mbed-cloud-client/MbedCloudClient.h" // Required for new MbedCloudClient()
 #include "factory_configurator_client.h"       // Required for fcc_* functions and FCC_* defines
 #include "m2mresource.h"                       // Required for M2MResource
+#include "key_config_manager.h"                // Required for kcm_factory_reset
 
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
 
@@ -36,6 +37,7 @@ static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
 static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
+static M2MResource* m2m_factory_reset_res;
 static SocketAddress sa;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
@@ -97,6 +99,14 @@ void client_unregistered(void)
     printf("Client unregistered.\n");
     (void) network->disconnect();
     cloud_client_running = false;
+}
+
+void factory_reset(void*)
+{
+    printf("POST factory reset executed\n");
+    m2m_factory_reset_res->send_delayed_post_response();
+
+    kcm_factory_reset();
 }
 
 void client_error(int err)
@@ -205,6 +215,12 @@ int main(void)
     if (m2m_deregister_res->set_execute_function(deregister) != true) {
         printf("m2m_post_res->set_execute_function() failed\n");
         return -1;
+    }
+
+    // optional Device resource for running factory reset for the device. Path of this resource will be: 3/0/6.
+    m2m_factory_reset_res = M2MInterfaceFactory::create_device()->create_resource(M2MDevice::FactoryReset);
+    if (m2m_factory_reset_res) {
+        m2m_factory_reset_res->set_execute_function(factory_reset);
     }
 
     printf("Register Pelion Device Management Client\n\n");
