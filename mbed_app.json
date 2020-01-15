@@ -288,8 +288,6 @@
             "storage_filesystem.blockdevice"            : "SPIF",
             "storage_filesystem.external_base_address"  : "(0x0)",
             "storage_filesystem.external_size"          : "(1024*1024*1)",
-            "platform.default-serial-baud-rate"         : 230400,
-            "platform.stdio-baud-rate"                  : 230400,
             "drivers.uart-serial-rxbuf-size"            : 1024,
             "drivers.uart-serial-txbuf-size"            : 1024,
             "lwip.ipv4-enabled"                         : true,

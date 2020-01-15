@@ -120,6 +120,15 @@ void update_progress(uint32_t progress, uint32_t total)
     printf("Update progress = %" PRIu8 "%%\n", percent);
 }
 
+void flush_stdin_buffer(void)
+{
+    FileHandle *debug_console = mbed::mbed_file_handle(STDIN_FILENO);
+    while(debug_console->readable()) {
+        char buffer[1];
+        debug_console->read(buffer, 1);
+    }
+}
+
 int main(void)
 {
     int status;
@@ -236,6 +245,9 @@ int main(void)
 
     t.start(callback(&queue, &EventQueue::dispatch_forever));
     queue.call_every(5000, value_increment);
+
+    // Flush the stdin buffer before reading from it
+    flush_stdin_buffer();
 
     while(cloud_client_running) {
         int in_char = getchar();
