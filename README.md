@@ -308,6 +308,46 @@ This should be verified by executing the Pelion E2E python test library tests.
 
 <span class="notes">**Note:** Future version will bring in also firmware update test as part of the minimum test set.</span>.
 
+## Contributing platform support
+
+The contribution of platform support to this repository is restricted to Arm Mbed Partners and Arm Engineering teams. If you’d like to add a custom or community-based platform, please fork this repository and add it into your own account.
+Expectations on contributions:
+
+-	No code changes in `main.cpp`.
+This is a minimal and generic application that’s expected to work on out of the box with all platforms listed in the documentation and [Pelion Quick-start](https://os.mbed.com/guides/connect-device-to-pelion/) guide
+
+- No changes to the hash of `mbed-os.lib ` or `mbed-cloud-client.lib` files.
+These are maintained and updated by the Arm team.
+
+-	No extra files or `.mbedignore` with removal of Mbed OS code.
+
+-	Configuration (required)
+     - `mbed_app.json` to add components or features. Please follow the guidelines in the porting section of the docs.
+
+-	Drivers (optional)
+     -	If required, drivers for networking or storage (non-default) can be added in the `drivers` folder using an external library (.lib). For example  `COMPONENT_MYDRIVER.lib` and enabling in `mbed_app.json`.
+
+-	Bootloader (required)
+     -	The configuration should be provided in either [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader) repository (as default configuration) or bootloader folder in this repository (if non-default). Our recommendation is to contribute to the mbed-bootloader repository whether possible. Please indicate where the bootloader configuration lives.
+     -	Binaries should be generated and contributed following the name conventions (see bootloader folder).
+
+-	Indication of platform support
+     -	Please update `README.md` file and add an entry to the list of supported boards.
+
+-	Test results and other information
+     -	Attach test logs for required toolchains as documented [here](https://os.mbed.com/docs/mbed-os/latest/tools/index.html)
+           -	Greentea (Mbed OS tests, including integration tests) 
+           - Pelion E2E tests based on pytest
+     -	Mbed OS and Mbed-cloud-client version used during the tests.
+        Note contributions will be accepted only against versions available in the example at that time.
+
+-	Pull-requests are raised against the master branch. The Arm team makes releases regularly.
+-	Pelion-Ready. Indicate if a platform is expected to be marked as Pelion-Ready and therefore be added to the Pelion Quick-start
+
+-	Support of the platform is provided by Silicon Partners or Platform vendors for Mbed Enabled platforms. If using a non-default configuration, then Arm is responsible for its support.
+
+Note platforms will be tested regularly in the Arm CI system. Please discuss with your Arm contact and make hardware available as indicated in the Mbed Enabled requirements. 
+
 # Known-issues
 
 Please review existing issues on github and report any problem you may see.
