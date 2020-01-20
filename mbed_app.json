@@ -106,8 +106,7 @@
             "storage_filesystem.filesystem"             : "LITTLE",
             "storage_filesystem.blockdevice"            : "SD",
             "target.lse_available"                      : 0,
-            "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"],
-            "run-ci"                                    : 2
+            "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"]
         },
         "UBLOX_C030_U201": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -184,8 +183,7 @@
             "esp8266.rst"                               : "PA_7",
             "esp8266.rts"                               : "PA_12",
             "esp8266.cts"                               : "PA_11",
-            "esp8266.provide-default"                   : true,
-            "run-ci"                                    : 2
+            "esp8266.provide-default"                   : true
         },
         "NUMAKER_IOT_M487": {
             "target.extra_labels_add"                   : ["PSA"],
