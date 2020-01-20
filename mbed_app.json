@@ -66,7 +66,8 @@
             "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
             "storage_tdb_internal.internal_base_address": "(1024*1024)",
             "storage_tdb_internal.internal_size"        : "(96*1024)",
-            "storage.storage_type"                      : "TDB_INTERNAL"
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2
         },
         "NUCLEO_F429ZI": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -82,7 +83,8 @@
             "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
             "storage_tdb_internal.internal_base_address": "(MBED_ROM_START+1024*1024)",
             "storage_tdb_internal.internal_size"        : "(128*1024)",
-            "storage.storage_type"                      : "TDB_INTERNAL"
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2
         },
         "UBLOX_EVK_ODIN_W2": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -104,7 +106,8 @@
             "storage_filesystem.filesystem"             : "LITTLE",
             "storage_filesystem.blockdevice"            : "SD",
             "target.lse_available"                      : 0,
-            "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"]
+            "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"],
+            "run-ci"                                    : 2
         },
         "UBLOX_C030_U201": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -181,7 +184,8 @@
             "esp8266.rst"                               : "PA_7",
             "esp8266.rts"                               : "PA_12",
             "esp8266.cts"                               : "PA_11",
-            "esp8266.provide-default"                   : true
+            "esp8266.provide-default"                   : true,
+            "run-ci"                                    : 2
         },
         "NUMAKER_IOT_M487": {
             "target.extra_labels_add"                   : ["PSA"],
@@ -238,7 +242,8 @@
             "update-client.firmware-header-version"     : "2",
             "update-client.storage-address"             : "(MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_SIZE)",
             "update-client.storage-locations"           : 1,
-            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
+            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
+            "run-ci"                                    : 2
         },
         "EP_AGORA": {
             "target.features_add"                       : ["LWIP", "STORAGE", "BOOTLOADER"],
