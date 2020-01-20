@@ -49,7 +49,8 @@
             "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
             "storage_tdb_internal.internal_base_address": "(512*1024)",
             "storage_tdb_internal.internal_size"        : "(32*1024)",
-            "storage.storage_type"                      : "TDB_INTERNAL"
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2
         },
         "K66F": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -324,6 +325,11 @@
             "help"      : "Helper macro to enable calculation of rom regions. target.header_offset and target.app_offset still needs to be calculated manually, though.",
             "value"     : "(32*1024)",
             "macro_name": "MBED_BOOTLOADER_SIZE"
+        },
+        "run-ci": {
+            "help"           : "Configuration item to control the level of CI verification. 0 = ignored, 1 = build-only, 2 = build + E2E tests",
+            "accepted_values": [0, 1, 2],
+            "value"          : 1
         }
     }
 }
