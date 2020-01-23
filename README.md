@@ -20,7 +20,7 @@ Board                          |  Connectivity     | Storage for credentials and
 `ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          |
 `ST NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 |
 `Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 |
-`ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   |
+`ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
 `Ublox UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
 `Ublox UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
 `Embedded Planet EP_AGORA`          | Cellular          | SPIF                    | Build-only
