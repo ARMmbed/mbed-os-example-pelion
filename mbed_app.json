@@ -49,7 +49,8 @@
             "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
             "storage_tdb_internal.internal_base_address": "(512*1024)",
             "storage_tdb_internal.internal_size"        : "(32*1024)",
-            "storage.storage_type"                      : "TDB_INTERNAL"
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2
         },
         "K66F": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -65,7 +66,8 @@
             "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
             "storage_tdb_internal.internal_base_address": "(1024*1024)",
             "storage_tdb_internal.internal_size"        : "(96*1024)",
-            "storage.storage_type"                      : "TDB_INTERNAL"
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2
         },
         "NUCLEO_F429ZI": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
@@ -262,7 +264,8 @@
             "update-client.firmware-header-version"     : "2",
             "update-client.storage-address"             : "(MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_FILESYSTEM_EXTERNAL_SIZE)",
             "update-client.storage-locations"           : 1,
-            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
+            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)",
+            "run-ci"                                    : 2
         },
         "EP_AGORA": {
             "target.features_add"                       : ["LWIP", "STORAGE", "BOOTLOADER"],
@@ -349,6 +352,11 @@
             "help"      : "Helper macro to enable calculation of rom regions. target.header_offset and target.app_offset still needs to be calculated manually, though.",
             "value"     : "(32*1024)",
             "macro_name": "MBED_BOOTLOADER_SIZE"
+        },
+        "run-ci": {
+            "help"           : "Configuration item to control the level of CI verification. 0 = ignored, 1 = build-only, 2 = build + E2E tests",
+            "accepted_values": [0, 1, 2],
+            "value"          : 1
         }
     }
 }
