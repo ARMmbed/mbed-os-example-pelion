@@ -329,7 +329,7 @@ You may need to fix issues and send a PR to [Mbed OS](https://github.com/ARMmbed
      -	If required, drivers for networking or storage (non-default) can be added in the `drivers` folder using an external library (.lib). For example  `COMPONENT_MYDRIVER.lib` and enabling in `mbed_app.json`.
 
 -	Bootloader (required)
-     -	The configuration should be provided in either [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader) repository (as default configuration) or [bootloader](https://github.com/ARMmbed/mbed-os-example-pelion/tree/master/bootloader) folder in this repository (if non-default). Our recommendation is to contribute to the mbed-bootloader repository whether possible. Please indicate where the bootloader configuration lives.
+     -	The configuration should be provided in either [mbed-bootloader](https://github.com/ARMmbed/mbed-bootloader) repository (as default configuration) or [bootloader](https://github.com/ARMmbed/mbed-os-example-pelion/tree/master/bootloader) folder in this repository (if non-default). Our recommendation is to contribute to the mbed-bootloader repository whenever possible. Please indicate where the bootloader configuration lives.
      -	Binaries should be generated and contributed following the name conventions in the bootloader folder.
 
 -	Indication of platform support
@@ -337,14 +337,14 @@ You may need to fix issues and send a PR to [Mbed OS](https://github.com/ARMmbed
 
 -	Test results and other information
      -	Attach test logs for required toolchains as documented [here](https://os.mbed.com/docs/mbed-os/latest/tools/index.html)
-           - Greentea (Mbed OS tests, including integration tests) 
-           - Pelion E2E tests based on pytest
+           - Greentea (Mbed OS tests, including integration tests).
+           - Pelion E2E tests based on pytest.
      -	Mbed OS and Mbed-cloud-client version used during the tests.
         Note contributions will be accepted only against versions available in the example at that time.
 
 -	Pull-requests are raised against the master branch. The Arm team makes releases regularly.
 
--	Pelion-Ready. Indicate if a platform is expected to be marked as Pelion-Ready and therefore be added to the Pelion Quick-start
+-	Pelion-Ready. Indicate if a board is expected to be marked as Pelion-Ready and therefore be added to the Pelion Quick-start.
 
 - You agree that the configuration changes contributed are considered open source and Apache 2.0 licensed.
 
