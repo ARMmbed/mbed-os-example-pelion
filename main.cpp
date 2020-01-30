@@ -232,7 +232,7 @@ int main(void)
 #endif // MBED_CLOUD_CLIENT_SUPPORT_UPDATE
 
     cloud_client->add_objects(m2m_obj_list);
-    cloud_client->setup(network); // cloud_client->setup(NULL); -- https://jira.arm.com/browse/IOTCLT-3114
+    cloud_client->setup(network);
 
     t.start(callback(&queue, &EventQueue::dispatch_forever));
     queue.call_every(5000, value_increment);
