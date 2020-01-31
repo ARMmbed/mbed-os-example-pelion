@@ -309,9 +309,7 @@ This should be verified by executing the Pelion E2E python test library tests.
 - Configure your API-key as instructed in the same README.
 - Basic tests can be then executed as:
 
-    `pytest TESTS/pelion-e2e-python-test-library/tests/dev-client-tests.py`
-
-<span class="notes">**Note:** Future version will bring in also firmware update test as part of the minimum test set.</span>.
+    `pytest TESTS/pelion-e2e-python-test-library/tests/dev-client-tests.py --update_bin=/home/user/mbed-os-example-pelion/mbed-os-example-pelion_update.bin --manifest_tool=/home/user/mbed-os-example-pelion`
 
 ## Contributing platform support
 
