@@ -34,6 +34,7 @@ Board                          |  Connectivity     | Storage for credentials and
 `Renesas GR_LYCHEE`                 | Wi-Fi (ESP32)     | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
 `Uhuru UHURU_RAVEN`                 | Wi-Fi (ESP32)     | Internal Flash          | Build-only
 `ST NUCLEO_F767ZI`                  | Ethernet          | Internal Flash          | Build-only
+`ST DISCO_L496AG`                   | Cellular          | QSPIF                   | Build-only
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
