@@ -26,6 +26,7 @@ Board                          |  Connectivity     | Storage for credentials and
 `Embedded Planet EP_AGORA`          | Cellular          | SPIF                    | Build-only
 `ST NUCLEO_H743ZI2`                 | Ethernet          | Internal Flash          | Build-only
 `ST NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash          | Build-only
+`Nuvoton NUMAKER_PFM_NUC472`        | Ethernet          | SD card (NUSD)          | Build-only
 `Nuvoton NUMAKER_PFM_M487`          | Ethernet          | SD card (NUSD)          | Build-only
 `Nuvoton NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
 `Seeed ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
