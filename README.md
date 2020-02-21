@@ -31,7 +31,8 @@ Board                          |  Connectivity     | Storage for credentials and
 `Nuvoton NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
 `Nuvoton NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
 `Seeed ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
-`Seeed Wio 3G`                      | Cellular          | Internal Flash          | Build-only
+`Seeed WIO_3G`                      | Cellular          | Internal Flash          | Build-only
+`Seeed WIO_BG96`                    | Cellular          | Internal Flash          | Build-only
 `Renesas RZ_A1H`                    | Ethernet          | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-PEACH/#security-limitation-of-this-platform)) | Build-only
 `Renesas GR_LYCHEE`                 | Wi-Fi (ESP32)     | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
 `Uhuru UHURU_RAVEN`                 | Wi-Fi (ESP32)     | Internal Flash          | Build-only
