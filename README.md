@@ -14,7 +14,7 @@ There is a more advanced example of the client with support for multiple operati
 This table shows a list of boards that are supported.
 
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
-----------------------------------  | ------------------| ------------------------| --------------
+------------------------------------| ------------------| ------------------------| --------------
 `NXP K64F`                          | Ethernet          | Internal Flash          |
 `NXP K66F`                          | Ethernet          | Internal Flash          |
 `ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
