@@ -226,7 +226,7 @@ int main(void)
         return -1;
     }
 
-    // optional Device resource for running factory reset for the device. Path of this resource will be: 3/0/6.
+    // optional Device resource for running factory reset for the device. Path of this resource will be: 3/0/5.
     m2m_factory_reset_res = M2MInterfaceFactory::create_device()->create_resource(M2MDevice::FactoryReset);
     if (m2m_factory_reset_res) {
         m2m_factory_reset_res->set_execute_function(factory_reset);
