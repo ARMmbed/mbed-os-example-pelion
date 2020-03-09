@@ -13,13 +13,13 @@ There is a more advanced example of the client with support for multiple operati
 
 This table shows a list of boards that are supported.
 
-Board                          |  Connectivity     | Storage for credentials and FW candidate | Notes
-----------------------------------| ------------------| ------------------------| --------------
+Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
+------------------------------------| ------------------| ------------------------| --------------
 `NXP K64F`                          | Ethernet          | Internal Flash          |
 `NXP K66F`                          | Ethernet          | Internal Flash          |
-`ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          |
-`ST NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 |
-`Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 |
+`ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
+`ST NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 | Build-only
+`Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 | Build-only
 `ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
 `Ublox UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
 `Ublox UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
@@ -363,4 +363,4 @@ Note platforms will be tested regularly in the Arm CI system. Please discuss wit
 
 # Known-issues
 
-Please review existing issues on github and report any problem you may see.
+Please review existing issues on [GitHub](https://github.com/ARMmbed/mbed-os-example-pelion/issues) and report any problem you may see.
