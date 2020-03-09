@@ -363,4 +363,4 @@ Note platforms will be tested regularly in the Arm CI system. Please discuss wit
 
 # Known-issues
 
-Please review existing issues on github and report any problem you may see.
+Please review existing issues on [GitHub](https://github.com/ARMmbed/mbed-os-example-pelion/issues) and report any problem you may see.
