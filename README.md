@@ -97,8 +97,24 @@ Logging (or tracing) can be enabled by modifying the [`mbed_app.json`](https://g
     ```
             "mbed-trace.enable"                         : null,
     ```
+By modifying that `null` to `1` and recompiling the application.
 
-By modifying that `null` to 1 and recompiling the application. The application and client uses [`mbed-trace`](https://github.com/ARMmbed/mbed-trace) library for the logging, more fine-grained control is also possible by setting log levels (by calling `mbed_trace_config_set()`) and inclusions/exclusions (by calling `mbed_trace_include_filters_set()` or mbed_trace_exclude_filters_set()`).
+Log level can be modified compile-time by defining `MBED_TRACE_MAX_LEVEL` -macro to `mbed_app.json`:
+
+   ```
+    "target.macros_add": [
+         "MBED_TRACE_MAX_LEVEL=TRACE_LEVEL_INFO",
+   ```
+
+Default level is `TRACE_LEVEL_DEBUG`, possible values are:
+* `TRACE_LEVEL_DEBUG` (largest amounts of logs)
+* `TRACE_LEVEL_INFO`
+* `TRACE_LEVEL_WARN` and
+* `TRACE_LEVEL_ERROR` (smallest amount of logs).
+
+Component level run-time control is also possible by setting log levels (by calling `mbed_trace_config_set()`) and inclusions/exclusions (by calling `mbed_trace_include_filters_set()` or mbed_trace_exclude_filters_set()`).
+
+For more details, see the [`mbed-trace`](https://github.com/ARMmbed/mbed-trace) library.
 
 ## Troubleshooting
 
