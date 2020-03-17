@@ -90,6 +90,16 @@ Check the public tutorial for further information:
 
   [https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html](https://www.pelion.com/docs/device-management/current/connecting/mbed-os.html)
 
+## Enabling logs
+
+Logging (or tracing) can be enabled by modifying the [`mbed_app.json`](https://github.com/ARMmbed/mbed-os-example-pelion/blob/master/mbed_app.json#L19) file.
+
+    ```
+            "mbed-trace.enable"                         : null,
+    ```
+
+By modifying that `null` to 1 and recompiling the application. The application and client uses [`mbed-trace`](https://github.com/ARMmbed/mbed-trace) library for the logging, more fine-grained control is also possible by setting log levels (by calling `mbed_trace_config_set()`) and inclusions/exclusions (by calling `mbed_trace_include_filters_set()` or mbed_trace_exclude_filters_set()`).
+
 ## Troubleshooting
 
 - Device initializes but can't register to Pelion
