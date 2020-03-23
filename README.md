@@ -15,29 +15,29 @@ This table shows a list of boards that are supported.
 
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
-`NXP K64F`                          | Ethernet          | Internal Flash          |
-`NXP K66F`                          | Ethernet          | Internal Flash          |
-`ST NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
-`ST NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 | Build-only
-`Ublox UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 | Build-only
-`ST DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
-`Ublox UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
-`Ublox UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
-`Embedded Planet EP_AGORA`          | Cellular          | SPIF                    | Build-only
-`ST NUCLEO_H743ZI2`                 | Ethernet          | Internal Flash          | Build-only
-`ST NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash          | Build-only
-`Nuvoton NUMAKER_PFM_NUC472`        | Ethernet          | SD card (NUSD)          | Build-only
-`Nuvoton NUMAKER_PFM_M487`          | Ethernet          | SD card (NUSD)          | Build-only
-`Nuvoton NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
-`Nuvoton NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
-`Seeed ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
-`Seeed WIO_3G`                      | Cellular          | Internal Flash          | Build-only
-`Seeed WIO_BG96`                    | Cellular          | Internal Flash          | Build-only
-`Renesas RZ_A1H`                    | Ethernet          | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-PEACH/#security-limitation-of-this-platform)) | Build-only
-`Renesas GR_LYCHEE`                 | Wi-Fi (ESP32)     | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
-`Uhuru UHURU_RAVEN`                 | Wi-Fi (ESP32)     | Internal Flash          | Build-only
-`ST NUCLEO_F767ZI`                  | Ethernet          | Internal Flash          | Build-only
-`ST DISCO_L496AG`                   | Cellular          | QSPIF                   | Build-only
+Embedded Planet `EP_AGORA`          | Cellular          | SPIF                    | Build-only
+Nuvoton `NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
+Nuvoton `NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
+Nuvoton `NUMAKER_PFM_M487`          | Ethernet          | SD card (NUSD)          | Build-only
+Nuvoton `NUMAKER_PFM_NUC472`        | Ethernet          | SD card (NUSD)          | Build-only
+NXP `K64F`                          | Ethernet          | Internal Flash          |
+NXP `K66F`                          | Ethernet          | Internal Flash          |
+Renesas `GR_LYCHEE`                 | Wi-Fi ESP32       | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
+Renesas `RZ_A1H`                    | Ethernet          | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-PEACH/#security-limitation-of-this-platform)) | Build-only
+Seeed `ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
+Seeed `WIO_3G`                      | Cellular          | Internal Flash          | Build-only
+Seeed `WIO_BG96`                    | Cellular          | Internal Flash          | Build-only
+ST `DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
+ST `DISCO_L496AG`                   | Cellular          | QSPIF                   | Build-only
+ST `NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 | Build-only
+ST `NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
+ST `NUCLEO_F767ZI`                  | Ethernet          | Internal Flash          | Build-only
+ST `NUCLEO_H743ZI2`                 | Ethernet          | Internal Flash          | Build-only
+ST `NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash          | Build-only
+Ublox `UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
+Ublox `UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
+Ublox `UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 | Build-only
+Uhuru `UHURU_RAVEN`                 | Wi-Fi ESP32       | Internal Flash          | Build-only
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
