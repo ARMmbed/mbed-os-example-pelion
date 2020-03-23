@@ -22,7 +22,7 @@ Nuvoton `NUMAKER_PFM_M487`          | Ethernet          | SD card (NUSD)        
 Nuvoton `NUMAKER_PFM_NUC472`        | Ethernet          | SD card (NUSD)          | Build-only
 NXP `K64F`                          | Ethernet          | Internal Flash          |
 NXP `K66F`                          | Ethernet          | Internal Flash          |
-Renesas `GR_LYCHEE`                 | Wi-Fi (ESP32)     | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
+Renesas `GR_LYCHEE`                 | Wi-Fi ESP32       | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
 Renesas `RZ_A1H`                    | Ethernet          | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-PEACH/#security-limitation-of-this-platform)) | Build-only
 Seeed `ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
 Seeed `WIO_3G`                      | Cellular          | Internal Flash          | Build-only
@@ -37,7 +37,7 @@ ST `NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash        
 Ublox `UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
 Ublox `UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
 Ublox `UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 | Build-only
-Uhuru `UHURU_RAVEN`                 | Wi-Fi (ESP32)     | Internal Flash          | Build-only
+Uhuru `UHURU_RAVEN`                 | Wi-Fi ESP32       | Internal Flash          | Build-only
 
 Build-only = This target is currently verified only via compilation, and is not verified at runtime.
 
