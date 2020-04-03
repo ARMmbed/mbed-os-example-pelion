@@ -605,6 +605,32 @@
             "storage.storage_type"                      : "TDB_INTERNAL",
             "storage_tdb_internal.internal_base_address": "(MBED_ROM_START + 32*1024)",
             "storage_tdb_internal.internal_size"        : "(32*2*1024)"
+        },
+        "MIMXRT1050_EVK": {
+            "target.macros_remove"                      : ["HYPERFLASH_BOOT"],
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
+            "target.macros_add"                         : ["MBED_APP_COMPILE"],
+            "target.network-default-interface-type"     : "ETHERNET",
+            "target.mbed_rom_start"                     : "0x60000000",
+            "target.mbed_rom_size"                      : "0x800000",
+            "target.sectors"                            : [[1610612736,4096]],
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-rt1050-qspi-internal_flash-no_rot-94579e9.bin",
+            "target.header_offset"                      : "0x10000",
+            "target.app_offset"                         : "0x10400",
+            "target.restrict_size"                      : "0x1EFC00",
+            "update-client.bootloader-details"          : "0x6000F000",
+            "bootloader-size"                           : "(64*1024)",
+            "update-client.application-details"         : "0x60010000",
+            "update-client.storage-address"             : "(MBED_ROM_START + 64*1024 + 1984*1024)",
+            "update-client.storage-size"                : "(1984*1024)",
+            "update-client.storage-locations"           : 1,
+            "update-client.storage-page"                : 8,
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP",
+            "storage_tdb_internal.internal_base_address": "(MBED_ROM_START + 64*1024 + 1984*2*1024 + 64*1024)",
+            "storage_tdb_internal.internal_size"        : "(2*128*1024)",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "run-ci"                                    : 2,
+            "mbed-trace.enable"                         : 1
         }
     },
     "config": {
