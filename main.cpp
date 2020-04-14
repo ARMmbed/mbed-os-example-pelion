@@ -29,9 +29,11 @@
 static MbedCloudClient *cloud_client;
 static bool cloud_client_running = true;
 static NetworkInterface *network = NULL;
+static int error_count = 0;
 
 // Fake entropy needed for non-TRNG boards. Suitable only for demo devices.
 const uint8_t MBED_CLOUD_DEV_ENTROPY[] = { 0xf6, 0xd6, 0xc0, 0x09, 0x9e, 0x6e, 0xf2, 0x37, 0xdc, 0x29, 0x88, 0xf1, 0x57, 0x32, 0x7d, 0xde, 0xac, 0xb3, 0x99, 0x8c, 0xb9, 0x11, 0x35, 0x18, 0xeb, 0x48, 0x29, 0x03, 0x6a, 0x94, 0x6d, 0xe8, 0x40, 0xc0, 0x28, 0xcc, 0xe4, 0x04, 0xc3, 0x1f, 0x4b, 0xc2, 0xe0, 0x68, 0xa0, 0x93, 0xe6, 0x3a };
+const int MAX_ERROR_COUNT = 5;
 
 static M2MResource* m2m_get_res;
 static M2MResource* m2m_put_res;
@@ -92,6 +94,14 @@ void client_registered(void)
 {
     printf("Client registered.\n");
     print_client_ids();
+    error_count = 0;
+}
+
+void client_registration_updated(void)
+{
+    printf("Client registration updated.\n");
+    print_client_ids();
+    error_count = 0;
 }
 
 void client_unregistered(void)
@@ -112,6 +122,15 @@ void factory_reset(void*)
 void client_error(int err)
 {
     printf("client_error(%d) -> %s\n", err, cloud_client->error_description());
+    if (err == MbedCloudClient::ConnectNetworkError ||
+        err == MbedCloudClient::ConnectDnsResolvingFailed ||
+        err == MbedCloudClient::ConnectSecureConnectionFailed) {
+        if(++error_count == MAX_ERROR_COUNT) {
+            printf("Max error count %d reached, rebooting.\n\n", MAX_ERROR_COUNT);
+            ThisThread::sleep_for(1*1000);
+            NVIC_SystemReset();
+	}
+    }
 }
 
 void update_progress(uint32_t progress, uint32_t total)
@@ -239,6 +258,8 @@ int main(void)
 #else
     cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error);
 #endif // MBED_CLOUD_CLIENT_SUPPORT_UPDATE
+
+    cloud_client->on_registration_updated(client_registration_updated);
 
     cloud_client->add_objects(m2m_obj_list);
     cloud_client->setup(network);
