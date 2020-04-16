@@ -100,7 +100,6 @@ void client_registered(void)
 void client_registration_updated(void)
 {
     printf("Client registration updated.\n");
-    print_client_ids();
     error_count = 0;
 }
 
