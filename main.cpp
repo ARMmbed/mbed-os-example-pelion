@@ -200,6 +200,15 @@ int main(void)
         return -1;
     }
 
+#ifdef MBED_CLOUD_CLIENT_SUPPORT_UPDATE
+    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
+#else
+    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error);
+#endif // MBED_CLOUD_CLIENT_SUPPORT_UPDATE
+
+    // Initialize client
+    cloud_client->init();
+
     printf("Create resources\n");
     M2MObjectList m2m_obj_list;
 
@@ -251,12 +260,6 @@ int main(void)
     }
 
     printf("Register Pelion Device Management Client\n\n");
-
-#ifdef MBED_CLOUD_CLIENT_SUPPORT_UPDATE
-    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error, NULL, update_progress);
-#else
-    cloud_client = new MbedCloudClient(client_registered, client_unregistered, client_error);
-#endif // MBED_CLOUD_CLIENT_SUPPORT_UPDATE
 
     cloud_client->on_registration_updated(client_registration_updated);
 
