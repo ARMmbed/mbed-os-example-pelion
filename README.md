@@ -22,6 +22,7 @@ Nuvoton `NUMAKER_PFM_M487`          | Ethernet          | SD card (NUSD)        
 Nuvoton `NUMAKER_PFM_NUC472`        | Ethernet          | SD card (NUSD)          | Build-only
 NXP `K64F`                          | Ethernet          | Internal Flash          |
 NXP `K66F`                          | Ethernet          | Internal Flash          |
+NXP `MIMXRT1050_EVK`                | Ethernet          | External QSPI Flash     |
 Renesas `GR_LYCHEE`                 | Wi-Fi ESP32       | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-LYCHEE/#security-limitation-of-this-platform)) | Build-only
 Renesas `RZ_A1H`                    | Ethernet          | External Flash ([See security limitation of this board](https://os.mbed.com/platforms/Renesas-GR-PEACH/#security-limitation-of-this-platform)) | Build-only
 Seeed `ARCH_MAX`                    | Ethernet          | SD card                 | Build-only
