@@ -29,10 +29,6 @@
         "Freescale": {
             "lwip.mem-size"                             : 12500
         },
-        "STM_EMAC": {
-            "lwip.pbuf-pool-size"                       : 16,
-            "lwip.mem-size"                             : 12500
-        },
         "K64F": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
             "target.network-default-interface-type"     : "ETHERNET",
