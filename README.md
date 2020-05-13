@@ -15,6 +15,7 @@ This table shows a list of boards that are supported.
 
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
+Cypress `CY8CPROTO-062-4343W`       | Wi-Fi             | QSPIF                   | Build-only
 Embedded Planet `EP_AGORA`          | Cellular          | SPIF                    | Build-only
 Nuvoton `NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
 Nuvoton `NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
@@ -385,7 +386,7 @@ You may need to fix issues and send a PR to [Mbed OS](https://github.com/ARMmbed
 
 -	Support of the platform is provided by Silicon Partners or Platform vendors for Mbed Enabled platforms. If using a non-default configuration, then Arm is responsible for its support.
 
-Note platforms will be tested regularly in the Arm CI system. Please discuss with your Arm contact and make hardware available as indicated in the Mbed Enabled requirements. 
+Note platforms will be tested regularly in the Arm CI system. Please discuss with your Arm contact and make hardware available as indicated in the Mbed Enabled requirements.
 
 # Known-issues
 
