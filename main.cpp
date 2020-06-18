@@ -166,9 +166,11 @@ int main(void)
         return -1;
     }
 
+#if MBED_MAJOR_VERSION > 5
     // Initialize root of trust
     DeviceKey &devkey = DeviceKey::get_instance();
     devkey.generate_root_of_trust();
+#endif
 
     // Connect with NetworkInterface
     printf("Connect to network\n");
