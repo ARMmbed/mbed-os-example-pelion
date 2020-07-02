@@ -1,6 +1,6 @@
 {
     "macros": [
-        "MBED_TRACE_MAX_LEVEL=TRACE_LEVEL_DEBUG",
+        "MBED_TRACE_MAX_LEVEL=TRACE_LEVEL_INFO",
         "MBED_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
         "MBED_CLOUD_CLIENT_USER_CONFIG_FILE=\"mbed_cloud_client_user_config.h\"",
         "ARM_UC_USE_PAL_BLOCKDEVICE=1",
@@ -16,7 +16,7 @@
             "platform.stdio-flush-at-exit"              : true,
             "rtos.main-thread-stack-size"               : 5120,
             "update-client.storage-locations"           : 1,
-            "mbed-trace.enable"                         : 1,
+            "mbed-trace.enable"                         : null,
             "events.shared-stacksize"                   : 2048,
             "nsapi.default-wifi-security"               : "WPA_WPA2",
             "nsapi.default-wifi-ssid"                   : "\"SSID\"",
