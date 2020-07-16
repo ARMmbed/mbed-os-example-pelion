@@ -17,6 +17,7 @@
 // ----------------------------------------------------------------------------
 #ifndef MBED_TEST_MODE
 #include "mbed.h"
+#include "DeviceKey.h"
 #include "kv_config.h"
 #include "mbed-cloud-client/MbedCloudClient.h" // Required for new MbedCloudClient()
 #include "factory_configurator_client.h"       // Required for fcc_* functions and FCC_* defines
@@ -164,6 +165,12 @@ int main(void)
         printf("kv_init_storage_config() - failed, status %d\n", status);
         return -1;
     }
+
+#if MBED_MAJOR_VERSION > 5
+    // Initialize root of trust
+    DeviceKey &devkey = DeviceKey::get_instance();
+    devkey.generate_root_of_trust();
+#endif
 
     // Connect with NetworkInterface
     printf("Connect to network\n");
