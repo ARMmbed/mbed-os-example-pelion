@@ -650,6 +650,28 @@
             "target.mbed_rom_start"                     : "0x10000000",
             "target.mbed_rom_size"                      : "0x00200000",
             "target.sectors"                            : [[268435456, 512]]
+        },
+        "CYTFM_064B0S2_4343W": {
+            "target.features_add"                       : [ "EXPERIMENTAL_API" ],
+            "target.device_has_add"                     : [ "QSPI" ],
+            "target.components_add"                     : [ "QSPIF" ],
+            "target.macros_add"                         : [
+                "MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\"",
+                "ENABLE_CY_FACTORY_FLOW",
+                "CY_PRE_PROVISIONED_BS_PRIV_KEY_ID=(PSA_KEY_ID_VENDOR_MIN+1)",
+                "ARM_UC_CUSTOM_FW_DETAILS" ],
+            "target.policy_file"                        :"TARGET_CYTFM_064B0S2_4343W/policy/cytfm_pelion_policy.json",
+            "target.network-default-interface-type"     : "WIFI",
+            "target.bootloader_supported"               : true,
+            "target.mbed_rom_start"                     : "0x10050400",
+            "target.mbed_rom_size"                      : "0x11FC00",
+            "rtos.thread-user-stack-size"               : 16384,
+            "mbed-cloud-client.psa-support"             : 1,
+            "update-client.storage-address"             : "0x00000000",
+            "update-client.storage-size"                : "0x140000",
+            "update-client.storage-locations"           : 1,
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+            "update-client.application-details"         : "0x10050000"
         }
     },
     "config": {
