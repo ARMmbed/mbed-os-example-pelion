@@ -34,5 +34,12 @@
 .DS_Store
 
 # App files
-update_default_resources.c
-mbed_cloud_dev_credentials.c
+/BUILD/
+/__pycache__/
+/mbed_settings.py*
+/mbed-cloud-client/
+/mbed-os/
+/drivers/COMPONENT_WIFI_ESP32/
+/drivers/COMPONENT_WIFI_ISM43362/
+/drivers/storage/COMPONENT_NUSD/
+/TESTS/pelion-e2e-python-test-library/
