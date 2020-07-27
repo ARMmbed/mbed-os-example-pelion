@@ -16,14 +16,14 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------
 #ifndef MBED_TEST_MODE
-#include "mbed.h"
-#include "DeviceKey.h"
-#include "kv_config.h"
 #include "mbed-cloud-client/MbedCloudClient.h" // Required for new MbedCloudClient()
 #include "factory_configurator_client.h"       // Required for fcc_* functions and FCC_* defines
 #include "m2mresource.h"                       // Required for M2MResource
 #include "key_config_manager.h"                // Required for kcm_factory_reset
 
+#include "mbed.h"
+#include "DeviceKey.h"
+#include "kv_config.h"
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
 
 // Pointers to the resources that will be created in main_application().
