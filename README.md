@@ -35,6 +35,7 @@ ST `NUCLEO_F429ZI`                  | Ethernet          | Internal Flash        
 ST `NUCLEO_F767ZI`                  | Ethernet          | Internal Flash          | Build-only
 ST `NUCLEO_H743ZI2`                 | Ethernet          | Internal Flash          | Build-only
 ST `NUCLEO_L4R5ZI`                  | Wi-Fi ESP8266     | Internal Flash          | Build-only
+ST `DISCO_F746NG `                  | Ethernet          | QSPIF                   | Build-only
 Ublox `UBLOX_C030_R412M`            | Cellular          | SD card                 | Build-only
 Ublox `UBLOX_C030_U201`             | Cellular          | SD card                 | Build-only
 Ublox `UBLOX_EVK_ODIN_W2`           | Wi-Fi             | SD card                 | Build-only
