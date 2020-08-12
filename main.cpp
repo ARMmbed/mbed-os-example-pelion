@@ -26,6 +26,9 @@
 #include "kv_config.h"
 #include "mbed-trace/mbed_trace.h"             // Required for mbed_trace_*
 
+#include "BlockDevice.h"
+#include "LittleFileSystem.h"
+
 // Pointers to the resources that will be created in main_application().
 static MbedCloudClient *cloud_client;
 static bool cloud_client_running = true;
@@ -42,6 +45,8 @@ static M2MResource* m2m_post_res;
 static M2MResource* m2m_deregister_res;
 static M2MResource* m2m_factory_reset_res;
 static SocketAddress sa;
+static SlicingBlockDevice* app_bd_slice;
+static LittleFileSystem *app_fs;
 
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -148,6 +153,50 @@ void flush_stdin_buffer(void)
     }
 }
 
+int init_filesystem(void)
+{
+    BlockDevice* bd = BlockDevice::get_default_instance();
+    if (bd== NULL) {
+        printf("init_filesystem failed to get default block device\n");
+        return MBED_ERROR_INVALID_ARGUMENT;
+    }
+    printf("init_filesystem creating new SlicingBlockDevice\n");
+    // Create slicing block device. 
+    // Start address should use MBED_CONF_UPDATE_CLIENT_STORAGE_ADDRESS + MBED_CONF_UPDATE_CLIENT_STORAGE_SIZE
+    // But it need to align with block device's erase size value. 
+    // For Demo purpose (2 * 1024 * 1024) and stop is start + 10MiB
+    bd_addr_t start = (2 * 1024 * 1024); 
+    bd_addr_t stop = start + (10 * 1024 * 1024);
+    
+    app_bd_slice = new SlicingBlockDevice(
+        bd, 
+        start,stop);
+
+    int err = app_bd_slice->init();
+    if (err != MBED_SUCCESS) {
+        printf("init_filesystem failed to init SlicingBlockDevice\n");
+        return err;
+    }
+    printf("init_filesystem SlicingBlockDevice initialized\n");
+    // Create FAT filesystem for application
+    app_fs = new LittleFileSystem("ExampleFilesystem");
+    printf("init_filesystem LittleFileSystem created\n");
+    err = app_fs->mount(app_bd_slice);
+    if (err != MBED_SUCCESS) {
+        printf("init_filesystem LittleFileSystem mount failed, try reformat\n");
+        err = app_fs->reformat(app_bd_slice);
+        if (err == MBED_SUCCESS) {
+            err = app_fs->mount(app_bd_slice);
+        }
+    }
+    if (err != MBED_SUCCESS) {
+        printf("init_filesystem LittleFileSystem mount failed\n");
+        return err;
+    }
+    printf("init_filesystem filesystem initialized\n");
+    return MBED_SUCCESS;
+}
+
 int main(void)
 {
     int status;
@@ -163,6 +212,13 @@ int main(void)
     status = kv_init_storage_config();
     if (status != MBED_SUCCESS) {
         printf("kv_init_storage_config() - failed, status %d\n", status);
+        return -1;
+    }
+
+    // Initialize application's filesystem
+    status = init_filesystem();
+    if (status != MBED_SUCCESS) {
+        printf("init_filesystem() - failed, status %d\n", status);
         return -1;
     }
 
