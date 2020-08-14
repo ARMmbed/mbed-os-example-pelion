@@ -320,6 +320,29 @@
             "update-client.storage-locations"           : 1,
             "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
         },
+        "DISCO_F746NG": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
+            "target.network-default-interface-type"     : "ETHERNET",
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-disco_f746ng-external_kvstore-qspif-738a116.bin",
+            "target.header_offset"                      : "0x20000",
+            "target.app_offset"                         : "0x20400",
+            "bootloader-size"                           : "(64*1024)",
+            "mbed-client-pal.pal-max-frag-len"          : 1,
+            "mbed-client.sn-coap-max-blockwise-payload-size": 256,
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+            "storage.storage_type"                      : "TDB_EXTERNAL",
+            "storage_tdb_external.blockdevice"          : "QSPIF",
+            "storage_tdb_external.rbp_internal_size"    : "(2*32*1024)",
+            "storage_tdb_external.internal_base_address": "(MBED_ROM_START + MBED_BOOTLOADER_SIZE)",
+            "storage_tdb_external.external_base_address": "(0)",
+            "storage_tdb_external.external_size"        : "(128 * 1024)",
+            "update-client.application-details"         : "(MBED_CONF_STORAGE_TDB_EXTERNAL_INTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_TDB_EXTERNAL_RBP_INTERNAL_SIZE)",
+            "update-client.bootloader-details"          : "0x800882c",
+            "update-client.firmware-header-version"     : "2",
+            "update-client.storage-address"             : "(MBED_CONF_STORAGE_TDB_EXTERNAL_EXTERNAL_BASE_ADDRESS + MBED_CONF_STORAGE_TDB_EXTERNAL_EXTERNAL_SIZE)",
+            "update-client.storage-locations"           : 1,
+            "update-client.storage-size"                : "((MBED_ROM_START + MBED_ROM_SIZE - APPLICATION_ADDR) * MBED_CONF_UPDATE_CLIENT_STORAGE_LOCATIONS)"
+        },
         "DISCO_L496AG": {
             "target.macros_add": [
                 "CELLULAR_DEVICE=STModCellular",
