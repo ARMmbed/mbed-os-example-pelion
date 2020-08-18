@@ -256,7 +256,7 @@ int main(void)
     m2m_deregister_res->set_delayed_response(true);
 
     if (m2m_deregister_res->set_execute_function(deregister) != true) {
-        printf("m2m_post_res->set_execute_function() failed\n");
+        printf("m2m_deregister_res->set_execute_function() failed\n");
         return -1;
     }
 
