@@ -15,6 +15,7 @@ This table shows a list of boards that are supported.
 
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
+Cypress `CYTFM_064B0S2_4343W`       | Wi-Fi             | Internal flash for credentials + external flash for FW candidate | To use `mbed-cloud-client-example` with the `CYTFM_064B0S2_4343W` board, please check out the [cytfm-064b0s2-4343w](../cytfm-064b0s2-4343w/TARGET_CYTFM_064B0S2_4343W/README.md) branch.
 Cypress `CY8CPROTO-062-4343W`       | Wi-Fi             | QSPIF                   | Build-only
 Embedded Planet `EP_AGORA`          | Cellular          | SPIF                    | Build-only
 Nuvoton `NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
