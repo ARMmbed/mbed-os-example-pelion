@@ -11,21 +11,21 @@ This document guides you through all of the steps required to run Device Managem
 
 ## Prerequisites
 
--	[Python 3.7](https://www.python.org/downloads/release/python-378)
--	Run `pip install mbed-cli cysecuretools pyopenssl` to install:
+- [Python 3.7](https://www.python.org/downloads/release/python-378)
+- Run `pip install mbed-cli cysecuretools pyopenssl` to install:
     - Mbed CLI 1.10.0 or higher
     - cysecuretools (you need 2.0.0 or higher)
-    -	pyopenssl
+    - pyopenssl
 - Install the `libusb` dependency for pyOCD based on the [Cypress documentation](https://www.cypress.com/file/502721/download#page=19&zoom=100,96,382).
 
     **Note:** Due to a known issue, Cypress recommends using [`libusb` version 1.0.21](https://github.com/libusb/libusb/releases/tag/v1.0.21) on Windows instead of the most recent version.
 
-## Cloning the example
+## Deploying the example
 
-1. Clone the `mbed-os-example-pelion` repository:
+1. Import the `mbed-os-example-pelion` repository:
 
     ```
-    git clone https://github.com/ARMmbed/mbed-os-example-pelion
+    mbed import https://github.com/ARMmbed/mbed-os-example-pelion
     ```
 
 1. Check out the `cytfm-064b0s2-4343w` branch:
@@ -55,19 +55,21 @@ You need to carry out this step only once on each board to be able to re-provisi
 
     You will be prompted to overwrite existing files. Type `y` to continue.
 
-1. 	Unplug your device from the power supply.
-1. 	Remove the jumper shunt from J26.
-1. 	Plug in power.
-1. 	Press the Mode button until the LED stops blinking to put the device in KitProg3 mode.
-1. 	To provision the board with basic configuration, run:
+1. Unplug your device from the power supply.
+1. Remove the jumper shunt from J26.
+1. Plug in power.
+1. Press the Mode button until the LED is always on to put the device in KitProg3 mode.
+1. To provision the board with basic configuration, run:
 
     ```
     cysecuretools -t cy8ckit-064b0s2-4343w -p policy/policy_multi_CM0_CM4_tfm.json provision-device
     ```
-1. 	Unplug your device from the power supply.
-1. 	Put back the jumper shunt back in J26.
-1. 	Plug in power.
-1. 	Press the Mode button until the LED stops blinking to put the device in DAPLink mode.
+1. Unplug your device from the power supply.
+1. Put back the jumper shunt back in J26.
+1. Plug in power.
+1. Press the Mode button until the LED starts blinking to put the device in DAPLink mode.
+
+    **Note:** You don't need the keys and other files that are created in this flow in the future. At this point, you can delete these files.
 
 For more information about the initial provisioning process, please see ["Provision the Device" section of the CY8CKIT-064B0S2-4343W PSoC 64 Secure Boot Wi-Fi BT Pioneer Kit Guide](https://www.cypress.com/file/502721/download#page=30&zoom=100,96,382).
 
@@ -113,6 +115,22 @@ For more information about the initial provisioning process, please see ["Provis
 
 ## Building and running the example
 
+1. To enable firmware update:
+
+    1. Install manifest-tool v2.0 or higher:
+
+        ```
+        pip install --upgrade manifest-tool
+        ```
+        The Cypress update flow requires the newest version of the manifest-tool.
+
+    1. Initialize the environment:
+
+        ```
+        manifest-dev-tool init --force -a [access key from Device Management Portal]
+        ```
+        For information about access keys, please see [Application access keys](https://www.pelion.com/docs/device-management/latest/user-account/application-access-keys.html).
+
 1. Build the example:
 
     ```
@@ -140,20 +158,6 @@ We currently support updating the example application in the CM4 core.
 
 **To update the example application:**
 
-1. Install manifest-tool v2.0 or higher:
-
-    ```
-    pip install --upgrade manifest-tool
-    ```
-    The Cypress update flow requires the newest version of the manifest-tool.
-
-1. Initialize the environment:
-
-    ```
-    manifest-dev-tool init --force -a [access key from Device Management Portal]
-    ```
-    For information about access keys, please see [Application access keys](https://www.pelion.com/docs/device-management/latest/user-account/application-access-keys.html).
-
 1. Update the firmware version in the `cytfm_pelion_policy.json` file:
 
     1. Go to `"id": 16` in the file.
@@ -169,21 +173,21 @@ We currently support updating the example application in the CM4 core.
     ```
     mbed compile -m CYTFM_064B0S2_4343W -t GCC_ARM
     ```
-    This creates a `./BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion-psoc64_upgrade.hex` file.
+    This creates a `./BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion_upgrade.hex` file.
 
     The manifest tool does not currently support hex files; therefore, you must convert the image to bin format.
 
 1. To convert the upgrade image from hex to bin format:
 
     ```
-    python inthex2bin.py BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion-psoc64_upgrade.hex
+    python inthex2bin.py BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion_upgrade.hex
     ```
-    This creates the `./BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion-psoc64_upgrade.bin` file.
+    This creates the `./BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion_upgrade.bin` file.
 
 1. Perform the update:
 
     ```
-    manifest-dev-tool update-v1 --payload-path BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion-psoc64_upgrade.bin --fw-version <new firmware version> --device-id <device ID> --start-campaign --wait-for-completion --timeout 3600
+    manifest-dev-tool update-v1 --payload-path BUILD/CYTFM_064B0S2_4343W/GCC_ARM/mbed-os-example-pelion_upgrade.bin --fw-version <new firmware version> --device-id <device ID> --start-campaign --wait-for-completion --timeout 3600
     ```
 
     Where:
