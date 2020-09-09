@@ -1,0 +1,13 @@
+mbed-cloud-client/certificate-enrollment-client/*
+mbed-cloud-client/device-sentry-client/*
+mbed-cloud-client/secure-device-access-client/*
+mbed-cloud-client/factory-configurator-client/fcc-bundle-handler/*
+mbed-cloud-client/factory-configurator-client/ftcd-comm-base/*
+mbed-cloud-client/factory-configurator-client/ftcd-comm-serial/*
+mbed-cloud-client/factory-configurator-client/ftcd-comm-socket/*
+mbed-cloud-client/factory-configurator-client/mbed-trace-helper/*
+mbed-cloud-client/mbed-client-pal/Configs/pal_config/NXP/*
+mbed-cloud-client/mbed-client-pal/Configs/pal_config/RTX_MW/*
+mbed-cloud-client/mbed-client-pal/Configs/pal_config/Renesas/*
+mbed-cloud-client/mbed-client-pal/Configs/pal_config/SXOS/*
+mbed-cloud-client/tinycbor/*

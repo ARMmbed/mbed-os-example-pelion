@@ -1,0 +1,31 @@
+From bb21c5969b639cc941b6779090e7229ad2aab18a Mon Sep 17 00:00:00 2001
+From: Moshe Shahar <moshe.shahar@arm.com>
+Date: Tue, 8 Sep 2020 17:37:41 +0300
+Subject: [PATCH] Rename PAL's pal_Crypto.h to pal_cryptography.h
+
+---
+ mbed-client-pal/Source/PAL-Impl/Services-API/pal.h              | 2 +-
+ .../PAL-Impl/Services-API/{pal_Crypto.h => pal_cryptography.h}  | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename mbed-client-pal/Source/PAL-Impl/Services-API/{pal_Crypto.h => pal_cryptography.h} (100%)
+
+diff --git a/mbed-client-pal/Source/PAL-Impl/Services-API/pal.h b/mbed-client-pal/Source/PAL-Impl/Services-API/pal.h
+index caa14ef..6c8a6c7 100644
+--- a/mbed-client-pal/Source/PAL-Impl/Services-API/pal.h
++++ b/mbed-client-pal/Source/PAL-Impl/Services-API/pal.h
+@@ -36,7 +36,7 @@ extern "C" {
+ #include "PAL-Impl/Services-API/pal_network.h"
+ #include "PAL-Impl/Services-API/pal_time.h"
+ #include "PAL-Impl/Services-API/pal_TLS.h"
+-#include "PAL-Impl/Services-API/pal_Crypto.h"
++#include "PAL-Impl/Services-API/pal_cryptography.h"
+ #include "PAL-Impl/Services-API/pal_entropy.h"
+ #include "PAL-Impl/Services-API/pal_update.h"
+ #include "PAL-Impl/Services-API/pal_internalFlash.h"
+diff --git a/mbed-client-pal/Source/PAL-Impl/Services-API/pal_Crypto.h b/mbed-client-pal/Source/PAL-Impl/Services-API/pal_cryptography.h
+similarity index 100%
+rename from mbed-client-pal/Source/PAL-Impl/Services-API/pal_Crypto.h
+rename to mbed-client-pal/Source/PAL-Impl/Services-API/pal_cryptography.h
+-- 
+2.28.0.windows.1
+

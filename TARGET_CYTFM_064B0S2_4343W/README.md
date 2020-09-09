@@ -115,6 +115,26 @@ For more information about the initial provisioning process, please see ["Provis
 
 ## Building and running the example
 
+1. In Windows only, rename `.mbedignore-for-win` to `.mbedignore`:
+
+    ```
+    rename .mbedignore-for-win .mbedignore
+    ```
+
+    Due to [mbed-os issue 7129](https://github.com/ARMmbed/mbed-os/issues/7129), the include path might exceed the maximum Windows command line string length. Using `.mbedignore` decreases the length of the include path but makes these features unavailable:
+    * Certificate Enrollment
+    * Device Sentry
+    * Secure Device Access
+    * Factory flow using FCU
+
+1. In Windows, Mac and other case-insensitive file systems, apply a patch that resolves an issue with conflicting file names by running:
+
+    ```
+    cd mbed-cloud-client
+    git am ..\mcc-fix-conflict-fname.patch
+    cd ..
+    ```
+
 1. To enable firmware update:
 
     1. Install manifest-tool v2.0 or higher:
