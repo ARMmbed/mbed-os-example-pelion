@@ -1,9 +1,9 @@
 # Pelion Device Management Client example for Mbed OS
 
-This is an basic Device Management client example for Mbed OS with the following features:
-- Support for latest Mbed OS and Device Management Client releases.
-- Support for Developer mode provisioning.
-- Support for FW Update.
+This is a basic Device Management Client example for Mbed OS that supports:
+- The latest Mbed OS and Device Management Client releases.
+- Developer mode provisioning.
+- Firmware Update.
 
 There is a more advanced example of the client with support for multiple operating systems in [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example) repository. The underlying client library is the same for both. This Mbed OS only example is simpler as it only supports one OS with a limited set of demonstrated features. If you want to do development in Linux and Mbed OS at the same time - you should use the [mbed-cloud-client-example](https://github.com/ARMmbed/mbed-cloud-client-example).
 
@@ -15,7 +15,7 @@ This table shows a list of boards that are supported.
 
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
-Cypress `CYTFM_064B0S2_4343W`       | Wi-Fi             | Internal flash for credentials + external flash for FW candidate | To use `mbed-cloud-client-example` with the `CYTFM_064B0S2_4343W` board, please check out the [cytfm-064b0s2-4343w](../cytfm-064b0s2-4343w/TARGET_CYTFM_064B0S2_4343W/README.md) branch.
+Cypress `CYTFM_064B0S2_4343W`       | Wi-Fi             | Internal flash for credentials + external flash for FW candidate | To use `mbed-os-example-pelion` with the `CYTFM_064B0S2_4343W` board, check out the `cytfm-064b0s2-4343w` branch and see [*Running PDMC example on the CYTFM_064B0S2_4343W*](../cytfm-064b0s2-4343w/TARGET_CYTFM_064B0S2_4343W/README.md).
 Cypress `CY8CPROTO-062-4343W`       | Wi-Fi             | QSPIF                   | Build-only
 Embedded Planet `EP_AGORA`          | Cellular          | SPIF                    | Build-only
 Nuvoton `NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
