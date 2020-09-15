@@ -3,7 +3,7 @@
 This document guides you through all of the steps required to run Device Management Client example on the CYTFM_064B0S2_4343W target.
 
 - [Prerequisites](#prerequisites).
-- [Cloning the example](#cloning-the-example).
+- [Deploying the example](#deploying-the-example).
 - [Provisioning the device with initial credentials](#provisioning-the-device-with-initial-credentials).
 - [Generating and provisioning Device Management credentials](#generating-and-provisioning-device-management-credentials).
 - [Building and running the example](#building-and-running-the-example).
@@ -11,7 +11,7 @@ This document guides you through all of the steps required to run Device Managem
 
 ## Prerequisites
 
-- [Python 3.7](https://www.python.org/downloads/release/python-378)
+- [Python 3.7](https://www.python.org/downloads/release/python-378).
 - Run `pip install mbed-cli cysecuretools pyopenssl` to install:
     - Mbed CLI 1.10.0 or higher
     - cysecuretools (you need 2.0.0 or higher)
@@ -19,6 +19,8 @@ This document guides you through all of the steps required to run Device Managem
 - Install the `libusb` dependency for pyOCD based on the [Cypress documentation](https://www.cypress.com/file/502721/download#page=19&zoom=100,96,382).
 
     **Note:** Due to a known issue, Cypress recommends using [`libusb` version 1.0.21](https://github.com/libusb/libusb/releases/tag/v1.0.21) on Windows instead of the most recent version.
+
+- [OpenSSL](https://www.openssl.org/source/gitrepo.html) (only if you do not have your own root CA private key and certificate and need to generate them yourself). 
 
 ## Deploying the example
 
@@ -88,6 +90,7 @@ For more information about the initial provisioning process, please see ["Provis
     Alternatively, if you don't have a root CA, you can generate a root CA private key and certificate using the [OpenSSL toolkit](https://www.openssl.org/):
 
     ```
+    set RANDFILE=.rnd
     openssl ecparam -out certificates/rootCA.key -name prime256v1 -genkey
     (echo '[ req ]'; echo 'distinguished_name=dn'; echo 'prompt = no'; echo '[ ext ]'; echo "basicConstraints = CA:TRUE"; echo "keyUsage = digitalSignature, keyCertSign, cRLSign"; echo '[ dn ]'; echo 'CN = ROOT_CA') > certificates/root.cnf
     openssl req -key certificates/rootCA.key -new -x509 -days 7300 -sha256 -out certificates/rootCA.pem -config certificates/root.cnf -extensions ext
