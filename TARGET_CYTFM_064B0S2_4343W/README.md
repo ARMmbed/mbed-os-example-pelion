@@ -20,7 +20,7 @@ This document guides you through all of the steps required to run Device Managem
 
     **Note:** Due to a known issue, Cypress recommends using [`libusb` version 1.0.21](https://github.com/libusb/libusb/releases/tag/v1.0.21) on Windows instead of the most recent version.
 
-- [OpenSSL](https://www.openssl.org/source/gitrepo.html) (only if you do not have your own root CA private key and certificate and need to generate them yourself). 
+- [OpenSSL](https://www.openssl.org/source/gitrepo.html) (only if you do not have your own root CA private key and certificate and need to generate them yourself).
 
 ## Deploying the example
 
@@ -90,7 +90,6 @@ For more information about the initial provisioning process, please see ["Provis
     Alternatively, if you don't have a root CA, you can generate a root CA private key and certificate using the [OpenSSL toolkit](https://www.openssl.org/):
 
     ```
-    set RANDFILE=.rnd
     openssl ecparam -out certificates/rootCA.key -name prime256v1 -genkey
     (echo '[ req ]'; echo 'distinguished_name=dn'; echo 'prompt = no'; echo '[ ext ]'; echo "basicConstraints = CA:TRUE"; echo "keyUsage = digitalSignature, keyCertSign, cRLSign"; echo '[ dn ]'; echo 'CN = ROOT_CA') > certificates/root.cnf
     openssl req -key certificates/rootCA.key -new -x509 -days 7300 -sha256 -out certificates/rootCA.pem -config certificates/root.cnf -extensions ext
@@ -118,6 +117,7 @@ For more information about the initial provisioning process, please see ["Provis
 
 ## Building and running the example
 
+1. Navigate to your `mbed-os-example-pelion` root folder.
 1. In Windows only, rename `.mbedignore-for-win` to `.mbedignore`:
 
     ```
