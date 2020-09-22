@@ -301,15 +301,20 @@ int main(void)
             print_client_ids(); // When 'i' is pressed, print endpoint info
             continue;
         } else if (in_char == 'r') {
-            fcc_status_e fcc_status = fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
-            if (fcc_status == FCC_STATUS_SUCCESS) {
-                printf("Storage erased, rebooting the device.\n\n");
+            printf("You are about to erase storage and reboot the board. Are you sure (Y/n)?\n");
+            in_char = getchar();
+            if (in_char == 'Y' || in_char == 'y') {
+                fcc_status_e fcc_status = fcc_storage_delete(); // When 'r' is pressed, erase storage and reboot the board.
+                if (fcc_status == FCC_STATUS_SUCCESS) {
+                    printf("Storage erased, rebooting the device.\n\n");
+                }
+                else {
+                    printf("WARN: Failed to erase storage, rebooting the device.\n\n");
+                }
+                ThisThread::sleep_for(1*1000);
+                NVIC_SystemReset();
             }
-            else {
-                printf("WARN: Failed to erase storage, rebooting the device.\n\n");
-            }
-            ThisThread::sleep_for(1*1000);
-            NVIC_SystemReset();
+            continue;
         } else if (in_char > 0 && in_char != 0x03) { // Ctrl+C is 0x03 in Mbed OS and Linux returns negative number
             value_increment(); // Simulate button press
             continue;
