@@ -3,7 +3,7 @@
 This document guides you through all of the steps required to run Device Management Client example on the CYTFM_064B0S2_4343W target.
 
 - [Prerequisites](#prerequisites).
-- [Cloning the example](#cloning-the-example).
+- [Deploying the example](#deploying-the-example).
 - [Provisioning the device with initial credentials](#provisioning-the-device-with-initial-credentials).
 - [Generating and provisioning Device Management credentials](#generating-and-provisioning-device-management-credentials).
 - [Building and running the example](#building-and-running-the-example).
@@ -11,7 +11,7 @@ This document guides you through all of the steps required to run Device Managem
 
 ## Prerequisites
 
-- [Python 3.7](https://www.python.org/downloads/release/python-378)
+- [Python 3.7](https://www.python.org/downloads/release/python-378).
 - Run `pip install mbed-cli cysecuretools pyopenssl` to install:
     - Mbed CLI 1.10.0 or higher
     - cysecuretools (you need 2.0.0 or higher)
@@ -19,6 +19,8 @@ This document guides you through all of the steps required to run Device Managem
 - Install the `libusb` dependency for pyOCD based on the [Cypress documentation](https://www.cypress.com/file/502721/download#page=19&zoom=100,96,382).
 
     **Note:** Due to a known issue, Cypress recommends using [`libusb` version 1.0.21](https://github.com/libusb/libusb/releases/tag/v1.0.21) on Windows instead of the most recent version.
+
+- [OpenSSL](https://www.openssl.org/source/gitrepo.html) (only if you do not have your own root CA private key and certificate and need to generate them yourself).
 
 ## Deploying the example
 
@@ -58,7 +60,7 @@ You need to carry out this step only once on each board to be able to re-provisi
 1. Unplug your device from the power supply.
 1. Remove the jumper shunt from J26.
 1. Plug in power.
-1. Press the Mode button until the LED is always on to put the device in KitProg3 mode.
+1. Press the Mode button until the LED is always on to put the device in DAPLink mode.
 1. To provision the board with basic configuration, run:
 
     ```
@@ -67,7 +69,6 @@ You need to carry out this step only once on each board to be able to re-provisi
 1. Unplug your device from the power supply.
 1. Put back the jumper shunt back in J26.
 1. Plug in power.
-1. Press the Mode button until the LED starts blinking to put the device in DAPLink mode.
 
     **Note:** You don't need the keys and other files that are created in this flow in the future. At this point, you can delete these files.
 
@@ -114,6 +115,8 @@ For more information about the initial provisioning process, please see ["Provis
     ```
 
 ## Building and running the example
+
+1. Navigate to your `mbed-os-example-pelion` root folder.
 
 1. In Windows only, rename `.mbedignore-for-win` to `.mbedignore`:
 
