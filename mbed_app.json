@@ -652,6 +652,7 @@
             "target.sectors"                            : [[268435456, 512]]
         },
         "CYTFM_064B0S2_4343W": {
+            "platform.stdio-buffered-serial"            : false,
             "target.features_add"                       : [ "EXPERIMENTAL_API" ],
             "target.device_has_add"                     : [ "QSPI" ],
             "target.components_add"                     : [ "QSPIF" ],
