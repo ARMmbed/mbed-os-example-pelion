@@ -165,7 +165,6 @@
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"]
         },
         "NUMAKER_IOT_M487": {
-            "target.extra_labels_add"                   : ["PSA"],
             "target.network-default-interface-type"     : "WIFI",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-m487_iot-block_device-kvstore-v4.1.0.bin",
             "bootloader-size"                           : "(64*1024)",
@@ -193,10 +192,9 @@
             "esp8266.cts"                               : "A3",
             "esp8266.rst"                               : "PH_3",
             "esp8266.provide-default"                   : true,
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8000"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8ms"]
         },
         "NUMAKER_IOT_M263A": {
-            "target.extra_labels_add"                   : ["PSA"],
             "target.network-default-interface-type"     : "WIFI",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-m263_iot-block_device-kvstore-v4.1.0.bin",
             "bootloader-size"                           : "(64*1024)",
@@ -224,7 +222,7 @@
             "esp8266.cts"                               : "PC_8",
             "esp8266.rst"                               : "PE_12",
             "esp8266.provide-default"                   : true,
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8000"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8ms"]
         },
         "DISCO_L475VG_IOT01A": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
