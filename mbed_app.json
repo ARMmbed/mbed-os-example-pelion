@@ -115,7 +115,6 @@
             "esp8266.provide-default"                   : true
         },
         "NUMAKER_PFM_NUC472": {
-            "target.extra_labels_add"                   : ["PSA"],
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-nuc472-block_device-kvstore-v4.1.0.bin",
             "bootloader-size"                           : "(64*1024)",
@@ -137,10 +136,9 @@
             "storage_filesystem.rbp_internal_size"      : "(2*4*1024)",
             "storage_filesystem.external_base_address"  : "(0x0)",
             "storage_filesystem.external_size"          : "(1024*1024*64)",
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"]
         },
         "NUMAKER_PFM_M487": {
-            "target.extra_labels_add"                   : ["PSA"],
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-m487-block_device-kvstore-v4.1.0.bin",
             "bootloader-size"                           : "(64*1024)",
@@ -162,7 +160,7 @@
             "storage_filesystem.rbp_internal_size"      : "(2*4*1024)",
             "storage_filesystem.external_base_address"  : "(0x0)",
             "storage_filesystem.external_size"          : "(1024*1024*64)",
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"]
         },
         "NUMAKER_IOT_M487": {
             "target.network-default-interface-type"     : "WIFI",
