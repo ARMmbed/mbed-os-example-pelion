@@ -410,8 +410,7 @@
             "target.macros_remove"                      : ["MBEDTLS_CONFIG_HW_SUPPORT"]
         },
         "RZ_A1H": {
-            "target.extra_labels_add"                   : ["PSA"],
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG_PSA.h\"", "MBEDTLS_PSA_CRYPTO_C", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"],
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0"],
             "target.bootloader_supported"               : true,
             "target.network-default-interface-type"     : "ETHERNET",
             "target.bootloader_img"                     : "bootloader/mbed-bootloader-gr_peach-internal_flash-no_rot-v4.1.2.bin",
