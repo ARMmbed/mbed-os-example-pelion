@@ -190,7 +190,7 @@
             "esp8266.cts"                               : "A3",
             "esp8266.rst"                               : "PH_3",
             "esp8266.provide-default"                   : true,
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8ms"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8s"]
         },
         "NUMAKER_IOT_M263A": {
             "target.network-default-interface-type"     : "WIFI",
@@ -220,7 +220,7 @@
             "esp8266.cts"                               : "PC_8",
             "esp8266.rst"                               : "PE_12",
             "esp8266.provide-default"                   : true,
-            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8ms"]
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS_SW_TRNG.h\"", "MBEDTLS_ENTROPY_NV_SEED", "PAL_USE_HW_TRNG=0", "ESP8266_SEND_TIMEOUT=8s"]
         },
         "DISCO_L475VG_IOT01A": {
             "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\""],
