@@ -51,13 +51,9 @@ This section is intended for developers to get started, import the example appli
 
   For instructions on installing and using Mbed CLI, please see our [documentation](https://os.mbed.com/docs/mbed-os/latest/tools/developing-mbed-cli.html).
 
-- Install the `CLOUD_SDK_API_KEY`
+- Generate your own access key. Pelion Device Management is available for any Mbed developer. Create a [free trial](https://os.mbed.com/pelion-free-tier).
 
-   `mbed config -G CLOUD_SDK_API_KEY ak_1MDE1...<snip>`
-
-   You should generate your own API key. Pelion Device Management is available for any Mbed developer. Create a [free trial](https://os.mbed.com/pelion-free-tier).
-
-   For instructions on how to generate your API key, please see our [documentation](https://cloud.mbed.com/docs/current/integrate-web-app/api-keys.html#generating-an-api-key).
+   For instructions on how to generate your access key, please see our [documentation](https://developer.pelion.com/docs/device-management/current/user-account/application-access-keys.html).
 
 ## Deploying
 
@@ -68,11 +64,37 @@ This repository is in the process of being updated and depends on few enhancemen
     cd mbed-os-example-pelion
     ```
 
-## Compiling
+## Preparing for build
 
+1. Configure Mbed CLI defaults:
+    ```
     mbed target K64F
     mbed toolchain GCC_ARM
-    mbed device-management init -d arm.com --model-name example-app --force -q
+    ```
+
+1. Download the developer certificates from the [Device Management Portal](https://portal.mbedcloud.com//):
+    1. Log in to the portal with your credentials.
+    1. Navigate to **Device identity** > **Certificates**.
+    1. Click **New certificate**.
+    1. Add a name and an optional description for the certificate, and click **Create certificate**.
+    1. Go to **Device identity** > **Certificates** again.
+    1. Click on your new certificate.
+    1. Click **Download developer C file** to download the file `mbed_cloud_dev_credentials.c`.
+
+1. Copy the `mbed_cloud_dev_credentials.c` file to the root folder of the example.
+
+1. Use `manifest-tool` python package to create an update-related configuration for your device:
+    1. Upgrade to `manifest-tool` >= `2.1.0`:
+        ```
+        pip install --upgrade manifest-tool
+        ```
+    1. Initialize the developer environment:
+        ```
+        manifest-dev-tool init --api-key <Device Management access key>
+        ```
+
+## Compiling
+
     mbed compile
 
 ## Program Flow
@@ -338,7 +360,7 @@ Basic pelion features are required to work:
 This should be verified by executing the Pelion E2E python test library tests.
 
 - Install the prerequisites listed in the README of the [pelion-e2e-python-test-library](https://github.com/ARMmbed/pelion-e2e-python-test-library).
-- Configure your API-key as instructed in the same README.
+- Configure your access key as instructed in the same README.
 - Basic tests can be then executed as:
 
     `pytest TESTS/pelion-e2e-python-test-library/tests/dev-client-tests.py --update_bin=/home/user/mbed-os-example-pelion/mbed-os-example-pelion_update.bin`
