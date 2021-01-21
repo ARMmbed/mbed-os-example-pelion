@@ -16,7 +16,8 @@ This table shows a list of boards that are supported.
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
 Cypress `CYTFM_064B0S2_4343W`       | Wi-Fi             | Internal flash for credentials + external flash for FW candidate | To use `mbed-os-example-pelion` with the `CYTFM_064B0S2_4343W` board, check out the `cytfm-064b0s2-4343w` branch and see [*Running PDMC example on the CYTFM_064B0S2_4343W*](../cytfm-064b0s2-4343w/TARGET_CYTFM_064B0S2_4343W/README.md).
-Cypress `CY8CPROTO-062-4343W`       | Wi-Fi             | QSPIF                   | Build-only
+Cypress `CY8CPROTO_062_4343W`       | Wi-Fi             | QSPIF                   | Build-only
+Cypress `CY8CKIT_062S2_43012`       | Wi-Fi             | QSPIF                   | Build-only
 Embedded Planet `EP_AGORA`          | Cellular          | SPIF                    | Build-only
 Nuvoton `NUMAKER_IOT_M263A`         | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only
 Nuvoton `NUMAKER_IOT_M487`          | Wi-Fi ESP8266     | SD card (NUSD)          | Build-only

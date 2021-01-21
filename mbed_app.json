@@ -577,6 +577,32 @@
             "target.mbed_rom_start"                     : "0x10000000",
             "target.mbed_rom_size"                      : "0x00200000",
             "target.sectors"                            : [[268435456, 512]]
+        },
+        "CY8CKIT_062S2_43012": {
+            "target.macros_add"                         : ["MBEDTLS_USER_CONFIG_FILE=\"mbedTLSConfig_mbedOS.h\"","ARM_UC_DELTAPAAL_WRITE_BUF_SIZE=512"],
+            "target.network-default-interface-type"     : "WIFI",
+            "target.components_add"                     : ["QSPIF"],
+            "target.components_remove"                  : ["CM0P_SLEEP"],
+            "target.bootloader_img"                     : "bootloader/mbed-bootloader-cy8cproto-062-4343w-ext-kvstore-qspi-v4.1.3.bin",
+            "bootloader-size"                           : "0x00020000",
+            "target.header_offset"                      : "0x00020000",
+            "target.app_offset"                         : "0x00020400",
+            "mbed-cloud-client.update-storage"          : "ARM_UCP_FLASHIAP_BLOCKDEVICE",
+            "update-client.bootloader-details"          : "0x10010B9C",
+            "update-client.application-details"         : "0x10020000",
+            "update-client.storage-address"             : "0x00000000",
+            "update-client.storage-size"                : "0x1C0000",
+            "update-client.storage-page"                : 512,
+            "storage.storage_type"                      : "TDB_EXTERNAL",
+            "storage_tdb_external.blockdevice"          : "QSPIF",
+            "storage_tdb_external.internal_base_address": "0x101E0000",
+            "storage_tdb_external.rbp_internal_size"    : "0x10000",
+            "storage_tdb_external.external_base_address": "0x00200000",
+            "storage_tdb_external.external_size"        : "4*0x40000",
+            "target.bootloader_supported"               : true,
+            "target.mbed_rom_start"                     : "0x10000000",
+            "target.mbed_rom_size"                      : "0x00200000",
+            "target.sectors"                            : [[268435456, 512]]
         }
     },
     "config": {
