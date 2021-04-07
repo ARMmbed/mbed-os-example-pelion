@@ -84,9 +84,9 @@ This repository is in the process of being updated and depends on few enhancemen
 1. Copy the `mbed_cloud_dev_credentials.c` file to the root folder of the example.
 
 1. Use `manifest-tool` python package to create an update-related configuration for your device:
-    1. Upgrade to `manifest-tool` >= `2.1.1`:
+    1. Install the requirements.txt from the application to get the supported version of manifest-tool:
         ```
-        pip install --upgrade manifest-tool
+        pip install -r requirements.txt
         ```
     1. Initialize the developer environment:
         ```
