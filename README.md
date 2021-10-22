@@ -13,6 +13,19 @@ There is a more advanced example of the client with support for multiple operati
 
 This table shows a list of boards that are supported.
 
+Following board support's new update client and bootloader
+
+FOTA Supported Board's              |  Connectivity     | Storage for credentials and FW candidate | Notes
+------------------------------------| ------------------| ------------------------| --------------
+NXP `K64F`                          | Ethernet          | Internal Flash          |
+NXP `K66F`                          | Ethernet          | Internal Flash          |
+ST `NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 | Build-only
+ST `NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
+ST `DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
+
+Migration guide for legacy targets previously supporting UC bootloader and now upgraded to support new update client and bootloaders.
+Please check section # Migration Guide for Targets supporting new update client implementation and bootloaders (Temporary placeholder for official documentation)
+
 Board                               |  Connectivity     | Storage for credentials and FW candidate | Notes
 ------------------------------------| ------------------| ------------------------| --------------
 Cypress `CYTFM_064B0S2_4343W`       | Wi-Fi             | Internal flash for credentials + external flash for FW candidate | To use `mbed-os-example-pelion` with the `CYTFM_064B0S2_4343W` board, check out the `cytfm-064b0s2-4343w` branch and see [*Running PDMC example on the CYTFM_064B0S2_4343W*](../cytfm-064b0s2-4343w/TARGET_CYTFM_064B0S2_4343W/README.md).
@@ -412,3 +425,9 @@ Note platforms will be tested regularly in the Arm CI system. Please discuss wit
 # Known-issues
 
 Please review existing issues on [GitHub](https://github.com/ARMmbed/mbed-os-example-pelion/issues) and report any problem you may see.
+
+# Migration Guide for Targets supporting new update client implementation and bootloaders (Temporary placeholder for official documentation)
+
+1. Official documentation is still work in progress.
+2. Current new bootloaders are compiled from https://github.com/PelionIoT/mbed-bootloader/tree/nanoclient feature branch which provide both the application and bootloader kvstore and update configurations.
+3. The provided prebuild-bl folder contain several examples for new configuration system and will be expanded in future.
