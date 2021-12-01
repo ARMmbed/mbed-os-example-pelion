@@ -30,6 +30,7 @@ Seeed `ARCH_MAX`                    | Ethernet          | SD card               
 Seeed `WIO_3G`                      | Cellular          | Internal Flash          | Build-only
 Seeed `WIO_BG96`                    | Cellular          | Internal Flash          | Build-only
 ST `DISCO_L475VG_IOT01A`            | Wi-Fi             | QSPIF                   | Build-only
+ST `DISCO_F746NG`                   | Ethernet          | QSPIF                   | Build-only
 ST `DISCO_L496AG`                   | Cellular          | QSPIF                   | Build-only
 ST `NUCLEO_F411RE`                  | Wi-Fi ESP8266     | SD card                 | Build-only
 ST `NUCLEO_F429ZI`                  | Ethernet          | Internal Flash          | Build-only
